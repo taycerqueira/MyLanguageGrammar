@@ -1,0 +1,183 @@
+﻿"Name"     = 'TODO: MyLanguage Grammar'
+"Author"   =  'TODO: List of Authors'
+"Version"  = '0.1'
+"About"    = 'TODO: MyLanguage Grammar,'
+
+"Case Sensitive" = True
+"Start Symbol" = <Programa>
+
+! =================================================
+! Conjuntos de Caracteres
+! =================================================
+
+{CabecaDoIdentificador} = {Letter}
+{CaudaDoIdentificador}       = {Alphanumeric} + [_]
+
+! =================================================
+! Símbolos Terminais
+! =================================================
+
+Identificador      = {CabecaDoIdentificador}{CaudaDoIdentificador}*
+
+! =================================================
+! Regras
+! =================================================
+
+! -------------------------------------------------
+! Declaração de Função, Procedimentos e método de início
+! -------------------------------------------------
+
+<DeclaracaoDeFuncao>  ::= 'function' <FuncID> '(' <Parametros> ')' <Bloco>
+                        | 'function' <FuncID> '(' ')' <Bloco>
+
+<DeclaracaoDeProcedimento> ::= 'procedure' <ProcID> '(' <Parametros> ')' <Bloco>
+                        | 'procedure' <ProcID> '(' ')' <Bloco>
+                                               
+<DeclaracaoDeInicio>     ::= 'start' '(' ')' <Bloco>
+
+<Bloco>     ::= '{' <ListaDeIntrucoes> '}'
+            | '{' '}'
+
+<FuncID>    ::= <Tipo> Identificador
+
+<ProcID>    ::= Identificador
+
+<Parametros>    ::= <Parametro> ',' <Parametros>
+            | <Parametro>
+
+<Parametro>      ::= <Tipo> Identificador
+
+! -------------------------------------------------
+! Function and Procedure Call
+! -------------------------------------------------
+
+
+! -------------------------------------------------
+! Base e instruções
+! -------------------------------------------------
+
+<Programa>    ::= <Declaracoes>
+
+<Declaracoes>  ::= <Declaracao> <Declaracoes>
+                | <Declaracao> ! TODO: Verificar situação que o programa não tem declarações
+
+<Declaracao>   ::= <DeclaracaoDeFuncao>
+                | <DeclaracaoDeProcedimento>
+                | <DeclaracaoDeInicio>
+                | <DecaracaoDeVariavel>
+                | <DeclaracaoEstruturaCondicional>
+                
+<DeclaracaoEstruturaCondicional> ::= <IfThen>
+                                  | <IfThenElse>
+
+<ListaDeIntrucoes>    ::= <Instrucao> 
+                    | <Instrucao> <ListaDeIntrucoes>
+
+<Instrucao> ::= <InstrucaoNormal> ! TODO: Colocar os outros Statements aqui
+
+<InstrucaoNormal>    ::= <Expressao> ';' 
+                | <InstrucaoDeRetorno>
+
+<InstrucaoDeRetorno>  ::= 'return' ';'
+                    | 'return' <Expressao> ';'
+
+! -------------------------------------------------
+! Tipos
+! -------------------------------------------------
+
+<Tipo>      ::= <Escalar>
+            | struct Identificador
+
+<Escalar>    ::= int
+            | float
+            | bool
+            | string
+            
+! -------------------------------------------------
+! Operadores
+! -------------------------------------------------
+
+<OperadorRelacional> ::= '!='
+                      | '=='
+                      | '<'
+                      | '<='
+                      | '>'
+                      | '>='
+                      | '='
+
+<OperadorLogico> ::= <OperadorNegacao>
+                    | <OperadorE>
+                    | <OperadorOu>
+                                          
+<OperadorNegacao> ::= '!'
+<OperadorE> ::= '&&'
+<OperadorOu> ::= '||'
+
+! -------------------------------------------------
+! Precedencia de Operadores
+! -------------------------------------------------
+
+<Expressao>    ::= <OperacaoDeAtribuicao> ',' <Expressao> ! TODO: Mudar <OperacaoDeAtribuicao> para o proximo nivel de precedencia
+                | <OperacaoDeAtribuicao> ! TODO: Mudar <OperacaoDeAtribuicao> para o proximo nivel de precedencia
+                | <OperacaoRelacional>
+                | <OperacaoLogica>
+
+<OperacaoDeAtribuicao>     ::= <Valor> '=' <Valor>
+                | <Valor>
+
+! As operações lógicas e relacionais não estão legais, mas deixei assim mesmo para poder fazer a estrutura condicional
+<OperacaoLogica> ::= <OperadorNegacao> <Valor>
+                  | <Valor> <OperadorE> <Valor>
+                  | <Valor> <OperadorOu> <Valor>
+
+! Não sei a operação relacionando pode utilizar a produção do operador lógico. Pode?
+<OperacaoRelacional> ::= <Valor> <OperadorRelacional> <Valor>
+               | '('<OperacaoRelacional>')' <OperadorLogico> '('<OperacaoRelacional>')'
+
+! TODO: Levels of operator precedence.
+
+! <Valor> must be the last level of precedence
+
+<Valor> ::= Identificador '(' <Expressao> ')' ! Funcao com parametros
+            | Identificador '(' ')' ! Funcao sem parametros
+            | Identificador ! Valor simples
+
+
+! -------------------------------------------------------------------
+! Declaração de Variáveis 
+! -------------------------------------------------------------------
+<DecaracaoDeVariavel> 
+           ::= var  '{'   <Escalar>  <ExpressaoIdentificadores>   '}' 
+           
+<ExpressaoIdentificadores> 
+          ::= <ExpressaoIdentificador>  ';' !! verificar se precisa mudar a nomeclatura
+          |   <ExpressaoIdentificador> ',' <ExpressaoIdentificadores>
+
+<ExpressaoIdentificador> 
+         ::= Identificador
+         
+! -------------------------------------------------------------------
+! Estruturas condicionais: If...Then, If...Then...Else
+! -------------------------------------------------------------------
+               
+<IfThen> ::= 'if' '(' <OperacaoRelacional> ')' 'then' <Bloco>
+
+<IfThenElse> ::= 'if' '(' <OperacaoRelacional> ')' 'then' <Bloco> 'else' <Bloco>
+
+! -------------------------------------------------------------------
+! Print
+! Delimitador = /n /t
+! -------------------------------------------------------------------
+
+<print> ::= 'print' '(' <Identificador | <Identificador> <var> <identificador> |
+                        |<Identificador> <var>
+                        |<var> <Identificador>
+                        | ')' ';''
+
+!<printf> ::= 'printf' '(<Identificador> + <delimitador>)' ';' 
+!   
+!   Fiquei na dúvida se já poderia ser assim:
+!
+!<printf> ::= 'printf' '(<Identificador> + '\n'>)' ';'
+
+scan
