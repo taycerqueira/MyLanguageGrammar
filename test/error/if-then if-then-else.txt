@@ -1,0 +1,3 @@
+if(a)then{ }
+if(a || b)then{}else{}
+f(a == b)then{ a = b}else{ b = a}

@@ -66,9 +66,6 @@ Identificador      = {CabecaDoIdentificador}{CaudaDoIdentificador}*
                 | <DeclaracaoDeInicio>
                 | <DecaracaoDeVariavel>
                 | <DeclaracaoEstruturaCondicional>
-                
-<DeclaracaoEstruturaCondicional> ::= <IfThen>
-                                  | <IfThenElse>
 
 <ListaDeIntrucoes>    ::= <Instrucao> 
                     | <Instrucao> <ListaDeIntrucoes>
@@ -159,25 +156,25 @@ Identificador      = {CabecaDoIdentificador}{CaudaDoIdentificador}*
 ! -------------------------------------------------------------------
 ! Estruturas condicionais: If...Then, If...Then...Else
 ! -------------------------------------------------------------------
-               
+ 
+<DeclaracaoEstruturaCondicional> ::= <IfThen>
+                        | <IfThen> 'else' <Bloco>       
+                               
 <IfThen> ::= 'if' '(' <OperacaoRelacional> ')' 'then' <Bloco>
-
-<IfThenElse> ::= 'if' '(' <OperacaoRelacional> ')' 'then' <Bloco> 'else' <Bloco>
 
 ! -------------------------------------------------------------------
 ! Print
 ! Delimitador = /n /t
 ! -------------------------------------------------------------------
 
-<print> ::= 'print' '(' <Identificador | <Identificador> <var> <identificador> |
-                        |<Identificador> <var>
-                        |<var> <Identificador>
-                        | ')' ';''
+!Comentei esse trecho porque está dando erro
+!<print> ::= 'print' '(' <Identificador | <Identificador> <var> <identificador> |
+                        !|<Identificador> <var>
+                        !|<var> <Identificador>
+                        !| ')' ';''
 
 !<printf> ::= 'printf' '(<Identificador> + <delimitador>)' ';' 
 !   
 !   Fiquei na dúvida se já poderia ser assim:
 !
 !<printf> ::= 'printf' '(<Identificador> + '\n'>)' ';'
-
-scan
