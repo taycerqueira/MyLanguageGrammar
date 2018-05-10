@@ -84,6 +84,7 @@ Identificador      = {CabecaDoIdentificador}{CaudaDoIdentificador}*
 
 <Tipo>      ::= <Escalar>
             | struct Identificador
+            | Identificador
 
 <Escalar>    ::= int
             | float
