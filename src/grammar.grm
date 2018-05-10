@@ -48,11 +48,6 @@ Identificador      = {CabecaDoIdentificador}{CaudaDoIdentificador}*
 <Parametro>      ::= <Tipo> Identificador
 
 ! -------------------------------------------------
-! Function and Procedure Call
-! -------------------------------------------------
-
-
-! -------------------------------------------------
 ! Base e instruções
 ! -------------------------------------------------
 
@@ -61,11 +56,12 @@ Identificador      = {CabecaDoIdentificador}{CaudaDoIdentificador}*
 <Declaracoes>  ::= <Declaracao> <Declaracoes>
                 | <Declaracao> ! TODO: Verificar situação que o programa não tem declarações
 
+! Aqui devem ficar apenas as estruturas que podem ser criadas fora de um Bloco
+! Exemplo: Funções, Variaveis, Estruturas, Typedef, Procedimentos, Start
 <Declaracao>   ::= <DeclaracaoDeFuncao>
                 | <DeclaracaoDeProcedimento>
                 | <DeclaracaoDeInicio>
                 | <DecaracaoDeVariavel>
-                | <DeclaracaoEstruturaCondicional>
 
 <ListaDeIntrucoes>    ::= <Instrucao> 
                     | <Instrucao> <ListaDeIntrucoes>
@@ -94,22 +90,22 @@ Identificador      = {CabecaDoIdentificador}{CaudaDoIdentificador}*
 ! -------------------------------------------------
 ! Operadores
 ! -------------------------------------------------
-
-<OperadorRelacional> ::= '!='
-                      | '=='
-                      | '<'
-                      | '<='
-                      | '>'
-                      | '>='
-                      | '='
-
-<OperadorLogico> ::= <OperadorNegacao>
-                    | <OperadorE>
-                    | <OperadorOu>
-                                          
-<OperadorNegacao> ::= '!'
-<OperadorE> ::= '&&'
-<OperadorOu> ::= '||'
+!
+! <OperadorRelacional> ::= '!='
+!                       | '=='
+!                       | '<'
+!                       | '<='
+!                       | '>'
+!                       | '>='
+!                       | '='
+! 
+! <OperadorLogico> ::= <OperadorNegacao>
+!                     | <OperadorE>
+!                     | <OperadorOu>
+!                                           
+! <OperadorNegacao> ::= '!' ! TODO: Remover produção unitária
+! <OperadorE> ::= '&&'
+! <OperadorOu> ::= '||'
 
 ! -------------------------------------------------
 ! Precedencia de Operadores
@@ -117,28 +113,41 @@ Identificador      = {CabecaDoIdentificador}{CaudaDoIdentificador}*
 
 <Expressao>    ::= <OperacaoDeAtribuicao> ',' <Expressao> ! TODO: Mudar <OperacaoDeAtribuicao> para o proximo nivel de precedencia
                 | <OperacaoDeAtribuicao> ! TODO: Mudar <OperacaoDeAtribuicao> para o proximo nivel de precedencia
-                | <OperacaoRelacional>
-                | <OperacaoLogica>
-
-<OperacaoDeAtribuicao>     ::= <Valor> '=' <Valor>
-                | <Valor>
-
-! As operações lógicas e relacionais não estão legais, mas deixei assim mesmo para poder fazer a estrutura condicional
-<OperacaoLogica> ::= <OperadorNegacao> <Valor>
-                  | <Valor> <OperadorE> <Valor>
-                  | <Valor> <OperadorOu> <Valor>
-
-! Não sei a operação relacionando pode utilizar a produção do operador lógico. Pode?
-<OperacaoRelacional> ::= <Valor> <OperadorRelacional> <Valor>
-               | '('<OperacaoRelacional>')' <OperadorLogico> '('<OperacaoRelacional>')'
 
 ! TODO: Levels of operator precedence.
+
+<OperacaoDeAtribuicao> ::= <Final> '=' <OpAdicao>
+                        | Identificador '=' <OpAdicao>
+                        | <OpAdicao>
+
+<OpAdicao> ::= <OpAdicao> '+' <OpMult> ! TODO: Remover recursividade Esquerda e fatorar
+               | <OpAdicao> '-' <OpMult>
+               | <OpMult>
+
+<OpMult>    ::= <OpMult> '*' <OpUnary> ! TODO: Remover recursividade Esquerda e fatorar
+               | <OpMult> '/' <OpUnary>
+               | <OpUnary>
+
+<OpUnary>   ::= '!' <OpUnary>
+            | '++' <OpUnary>
+            | '--' <OpUnary>
+            | <Final>
+            | <Valor>
+
+<Final>     ::= Identificador <Acessando> 
+
+<Acessando>        ::= <Acesso> | <Acesso> <Acessando> 
+
+<Acesso>        ::= '.' Identificador ! Acesso de campo
+                | '[' <Valor> ']' ! Acesso de array
+
 
 ! <Valor> must be the last level of precedence
 
 <Valor> ::= Identificador '(' <Expressao> ')' ! Funcao com parametros
             | Identificador '(' ')' ! Funcao sem parametros
             | Identificador ! Valor simples
+            | '(' <Expressao> ')'
 
 
 ! -------------------------------------------------------------------
@@ -157,12 +166,12 @@ Identificador      = {CabecaDoIdentificador}{CaudaDoIdentificador}*
 ! -------------------------------------------------------------------
 ! Estruturas condicionais: If...Then, If...Then...Else
 ! -------------------------------------------------------------------
- 
-<DeclaracaoEstruturaCondicional> ::= <IfThen>
-                        | <IfThen> 'else' <Bloco>       
-                               
-<IfThen> ::= 'if' '(' <OperacaoRelacional> ')' 'then' <Bloco>
-
+!  
+! <DeclaracaoEstruturaCondicional> ::= <IfThen>
+!                         | <IfThen> 'else' <Bloco>       
+!                                
+! <IfThen> ::= 'if' '(' <OperacaoRelacional> ')' 'then' <Bloco>
+! 
 ! -------------------------------------------------------------------
 ! Print
 ! Delimitador = /n /t
