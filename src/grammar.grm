@@ -155,17 +155,30 @@ Caracter  = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | '%' | 
 
 
 ! -------------------------------------------------------------------
-! Declaração de Variáveis 
+! Declaração de Bloco Variáveis 
 ! -------------------------------------------------------------------
-<DecaracaoDeVariavel> 
-           ::= var  '{'   <Escalar>  <ExpressaoIdentificadores>   '}' 
-           
-<ExpressaoIdentificadores> 
-          ::= <ExpressaoIdentificador>  ';' !! verificar se precisa mudar a nomeclatura
-          |   <ExpressaoIdentificador> ',' <ExpressaoIdentificadores>
+<DeclaracaoDeBlocoVar> 
+          ::= var  '{'  <CorposDeclaracaoBlocoVar> '}'          
+            
+<CorposDeclaracaoBlocoVar>
+          ::= <CorpoDeclaracaoBlocoVar>
+          | <CorpoDeclaracaoBlocoVar> <CorposDeclaracaoBlocoVar>
+          
+<CorpoDeclaracaoBlocoVar> 
+        ::= <Escalar>  <ExpressaoIdentificadoresVar>         
+        | Identificador  <ExpressaoIdentificadoresVar>  
+               
+<ExpressaoIdentificadoresVar> 
+          ::= <ExpressaoIdentificadorVar>  ';' 
+          |   <ExpressaoIdentificadorVar> ',' <ExpressaoIdentificadoresVar>
 
-<ExpressaoIdentificador> 
-         ::= Identificador
+<ExpressaoIdentificadorVar> 
+         ::= Identificador'='Digitos
+          | Identificador
+          | Identificador'='Identificador
+          | '['']' Identificador
+          | '['']' '['']' Identificador
+          !! adicionar para receber retorno de função
          
 ! -------------------------------------------------------------------
 ! Estruturas condicionais: If...Then, If...Then...Else
