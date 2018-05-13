@@ -65,7 +65,7 @@ Caracter  = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | '%' | 
 <Declaracao>   ::= <DeclaracaoDeFuncao>
                 | <DeclaracaoDeProcedimento>
                 | <DeclaracaoDeInicio>
-                | <DecaracaoDeVariavel>
+                | <DeclaracaoDeBlocoVar> 
 
 <ListaDeIntrucoes>    ::= <Instrucao> 
                     | <Instrucao> <ListaDeIntrucoes>
