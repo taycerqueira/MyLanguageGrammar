@@ -55,7 +55,7 @@ Caracter  = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | '%' | 
 ! Base e instruções
 ! -------------------------------------------------
 
-<Programa>    ::= <Declaracoes>
+<Programa>    ::= <Declaracoes> 
 
 <Declaracoes>  ::= <Declaracao> <Declaracoes>
                 | <Declaracao> ! TODO: Verificar situação que o programa não tem declarações
@@ -153,7 +153,40 @@ Caracter  = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | '%' | 
             | Identificador ! Valor simples
             | '(' <Expressao> ')'
 
+! -------------------------------------------------------------------
+! Operação relacional e Lógica
+! -------------------------------------------------------------------
 
+<Expressao_Retorna>    ::=  <OperacaoRelacional> 
+
+<OperacaoRelacional> ::= '!'Identificador<OpLogico>
+                        |<OpLogico> 
+
+<OpLogico> ::= <OpLogico> <EscalarLogico> <OpRelacional> 
+              |<OpLogico>'!'<OpRelacional> 
+              | <OpRelacional> 
+              
+
+<OpRelacional>    ::= <OpRelacional> <EscalarRelacional> <ValorRelacional>
+                | <ValorRelacional>
+         
+<ValorRelacional> ::=  Identificador 
+            |Identificador'[' Identificador']'
+            |Identificador'['Digitos']'
+            | '(' <Expressao_Retorna> ')'
+            |
+<EscalarRelacional> 
+      ::= '!='
+        | '=='
+        | '<'
+        | '<='
+        |'>'
+        |'>='
+        
+        
+<EscalarLogico>       
+        ::= '&&'
+        | '||'
 ! -------------------------------------------------------------------
 ! Declaração de Bloco Variáveis 
 ! -------------------------------------------------------------------
@@ -179,7 +212,7 @@ Caracter  = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | '%' | 
           | '['']' Identificador
           | '['']' '['']' Identificador
           !! adicionar para receber retorno de função
-         
+!         
 ! -------------------------------------------------------------------
 ! Estruturas condicionais: If...Then, If...Then...Else
 ! -------------------------------------------------------------------
