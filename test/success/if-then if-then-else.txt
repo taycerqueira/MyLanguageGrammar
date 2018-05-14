@@ -1,2 +1,3 @@
-if(a == b)then{ }
-if(a < b)then{}else{}
+start() {
+    if(a == b)
+}

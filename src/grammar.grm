@@ -18,10 +18,8 @@
 ! =================================================
 
 Identificador      = {CabecaDoIdentificador}{CaudaDoIdentificador}*
-Digitos = ('-')?{Number}+('.'{Number}+)?
+Digitos = ( '-' )? {Number}+ ( '.' {Number}+ )?
 Caracter  = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | '%' | '&' | '(' | ')' | '*' | '+'| ',' | '-' |'.' | '/' | '/' | ':' | ';' | '<' | '>' | '=' | '?' | '@' | '[' | ']' | '\' | '^' | '_' | '`'  | '{' | '|' | '}' | '~')* '"'
-
-
 
 ! =================================================
 ! Regras
@@ -39,6 +37,8 @@ Caracter  = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | '%' | 
                                                
 <DeclaracaoDeInicio>     ::= 'start' '(' ')' <Bloco>
 
+<DeclaracaoDeTypedef> ::= typedef <Tipo> Identificador ';'
+
 <Bloco>     ::= '{' <ListaDeIntrucoes> '}'
             | '{' '}'
 
@@ -51,8 +51,6 @@ Caracter  = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | '%' | 
 
 <Parametro>      ::= <Tipo> Identificador
 
-<DeclaracaoTypedef> ::= typedef <Tipo> Identificador ';'
-
 ! -------------------------------------------------
 ! Base e instruções
 ! -------------------------------------------------
@@ -60,7 +58,7 @@ Caracter  = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | '%' | 
 <Programa>    ::= <Declaracoes> 
 
 <Declaracoes>  ::= <Declaracao> <Declaracoes>
-                | <Declaracao> ! TODO: Verificar situação que o programa não tem declarações
+                | <Declaracao> ! TODO: Adicionar produção vazia para caso do programa não ter declarações
 
 ! Aqui devem ficar apenas as estruturas que podem ser criadas fora de um Bloco
 ! Exemplo: Funções, Variaveis, Estruturas, Typedef, Procedimentos, Start
@@ -68,24 +66,33 @@ Caracter  = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | '%' | 
                 | <DeclaracaoDeProcedimento>
                 | <DeclaracaoDeInicio>
                 | <DeclaracaoDeBlocoVar>
-                | <DeclaracaoTypedef>
+                | <DeclaracaoDeTypedef>
 
-<ListaDeIntrucoes>    ::= <Instrucao> 
+<ListaDeIntrucoes>    ::= <Instrucao>  
                     | <Instrucao> <ListaDeIntrucoes>
 
-<Instrucao> ::= <InstrucaoNormal> ! TODO: Colocar os outros Statements aqui
+! Instrução deve ser capaz de produzir todos os comandos que podem ficar dentro de um bloco
+! Exemplo dos blocos: if, função, procedimento, while, etc... 
+! Exemplo das instruções: if, while, Chamada de função, print, scan, etc... ! TODO: Colocar os outros Statements aqui
+<Instrucao> ::= <InstrucaoNormal> 
+            | 'if' '(' <ExpressaoRelacional> ')' <Bloco> ! TODO: Tirar daqui
 
-<InstrucaoNormal>    ::= <Expressao> ';' 
-                | <InstrucaoDeRetorno>
+! Instrução Normal são as insrtuções de unica linha que terminal com ';'
+! Exemplo: a = b;, print();, scan();, chamadaDeFuncao();
+<InstrucaoNormal>    ::= <OperacaoDeAtribuicao> ';' 
+                | <InstrucaoDeRetorno> ';'
+                
 
-<InstrucaoDeRetorno>  ::= 'return' ';'
-                    | 'return' <Expressao> ';'
+<InstrucaoDeRetorno>  ::= 'return' 
+                    | 'return' <Expressao>
 
 ! -------------------------------------------------
 ! Tipos
 ! -------------------------------------------------
 
-<Tipo>      ::= <Escalar>
+<Tipo>     ::= <TipoBase> | <TipoBase> <TipoVetorDeclarando>
+
+<TipoBase>   ::= <Escalar>
             | struct Identificador
             | Identificador
 
@@ -93,39 +100,31 @@ Caracter  = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | '%' | 
             | float
             | bool
             | string
-            
-! -------------------------------------------------
-! Operadores
-! -------------------------------------------------
-!
-! <OperadorRelacional> ::= '!='
-!                       | '=='
-!                       | '<'
-!                       | '<='
-!                       | '>'
-!                       | '>='
-!                       | '='
-! 
-! <OperadorLogico> ::= <OperadorNegacao>
-!                     | <OperadorE>
-!                     | <OperadorOu>
-!                                           
-! <OperadorNegacao> ::= '!' ! TODO: Remover produção unitária
-! <OperadorE> ::= '&&'
-! <OperadorOu> ::= '||'
+
+! Permite utilização de tipos vector, tando em inicialização de variáveis como em retorno de funções
+
+<TipoVetorDeclarando>   ::= <TipoVetorDeclarado> | <TipoVetorDeclarado> <TipoVetorDeclarando>
+
+<TipoVetorDeclarado>    ::= '[' ']'
+
 
 ! -------------------------------------------------
-! Precedencia de Operadores
+! Precedência de Operadores
 ! -------------------------------------------------
 
-<Expressao>    ::= <OperacaoDeAtribuicao> ',' <Expressao> ! TODO: Mudar <OperacaoDeAtribuicao> para o proximo nivel de precedencia
-                | <OperacaoDeAtribuicao> ! TODO: Mudar <OperacaoDeAtribuicao> para o proximo nivel de precedencia
 
 ! TODO: Levels of operator precedence.
 
-<OperacaoDeAtribuicao> ::= <Final> '=' <OpAdicao>
-                        | Identificador '=' <OpAdicao>
-                        | <OpAdicao>
+<OperacaoDeAtribuicao> ::= <Final> '=' <Expressao>
+                        | Identificador '=' <Expressao>
+                        | <Expressao>
+
+! Expressao diz respeito a qualquer conjunto de valores que podem ficar
+! do lado direto de uma expressão de atribuição
+<Expressao>    ::= <OpAdicao>
+
+<ParametrosFuncao> ::= <OpAdicao> ',' <ParametrosFuncao>
+                | <OpAdicao> 
 
 !<OpAdicao> ::= <OpAdicao> '+' <OpMult> ! TODO: Remover recursividade Esquerda e fatorar
 !               | <OpAdicao> '-' <OpMult>
@@ -159,8 +158,8 @@ Caracter  = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | '%' | 
 
 ! <Valor> must be the last level of precedence
 
-<Valor> ::= Identificador '(' <Expressao> ')' ! Funcao com parametros
-            | Identificador '(' ')' ! Funcao sem parametros
+<Valor>     ::= Identificador '(' <ParametrosFuncao> ')' ! Função ou procedimento com parametros
+            | Identificador '(' ')' ! Função ou procedimento sem parametros
             | Identificador ! Valor simples
             | '(' <Expressao> ')'
             | Digitos
@@ -169,24 +168,22 @@ Caracter  = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | '%' | 
 ! Operação relacional e Lógica
 ! -------------------------------------------------------------------
 
-<Expressao_Retorna>    ::=  <OperacaoRelacional> 
+<ExpressaoRelacional>   ::=  <OpLogica>
+                        | '!' <OpLogica> 
 
-<OperacaoRelacional> ::= '!'Identificador<OpLogico>
-                        |<OpLogico> 
-
-<OpLogico> ::= <OpLogico> <EscalarLogico> <OpRelacional> 
-              |<OpLogico>'!'<OpRelacional> 
-              | <OpRelacional> 
-              
+<OpLogica>        ::= <OpLogica> <EscalarLogico> <OpRelacional>
+                        | <OpRelacional>
 
 <OpRelacional>    ::= <OpRelacional> <EscalarRelacional> <ValorRelacional>
-                | <ValorRelacional>
-         
-<ValorRelacional> ::=  Identificador 
-            |Identificador'[' Identificador']'
-            |Identificador'['Digitos']'
-            | '(' <Expressao_Retorna> ')'
-            |
+                        | <ValorRelacional>
+                        | <Final>
+
+<ValorRelacional> ::= Identificador '(' <ParametrosFuncao> ')' ! Função ou procedimento com parametros
+            | Identificador '(' ')' ! Função ou procedimento sem parametros
+            | Identificador ! Valor simples
+            | '(' <ExpressaoRelacional> ')'
+            | Digitos
+
 <EscalarRelacional> 
       ::= '!='
         | '=='
@@ -194,16 +191,15 @@ Caracter  = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | '%' | 
         | '<='
         |'>'
         |'>='
-        
-        
+
 <EscalarLogico>       
         ::= '&&'
         | '||'
+
 ! -------------------------------------------------------------------
 ! Declaração de Bloco Variáveis 
 ! -------------------------------------------------------------------
-<DeclaracaoDeBlocoVar> 
-          ::= var  '{'  <CorposDeclaracaoBlocoVar> '}'          
+<DeclaracaoDeBlocoVar> ::= var  '{'  <CorposDeclaracaoBlocoVar> '}'
             
 <CorposDeclaracaoBlocoVar>
           ::= <CorpoDeclaracaoBlocoVar>
@@ -218,7 +214,7 @@ Caracter  = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | '%' | 
           |   <ExpressaoIdentificadorVar> ',' <ExpressaoIdentificadoresVar>
 
 <ExpressaoIdentificadorVar> 
-         ::= Identificador'='Digitos
+         ::= Identificador'=' Digitos
           | Identificador
           | Identificador'='Identificador
           | '['']' Identificador
@@ -245,9 +241,9 @@ Caracter  = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | '%' | 
           |   <ExpressaoIdentificadorConst> ',' <ExpressaoIdentificadoresConst>
 
 <ExpressaoIdentificadorConst> 
-         ::= Identificador'='Digitos
-          | Identificador'='Identificador
-         !| Identificador'='<EsxpressaoFuncao> !!!!!
+         ::= Identificador'=' Digitos
+          | Identificador'=' Identificador
+         !| Identificador'=' <EsxpressaoFuncao> !!!!!
          !| Identificador'='<AcessoAEstrutura> e etc !!!!!     
 
 
