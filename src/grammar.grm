@@ -37,7 +37,8 @@ Caracter  = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | '%' | 
                                                
 <DeclaracaoDeInicio>     ::= 'start' '(' ')' <Bloco>
 
-<DeclaracaoDeTypedef> ::= typedef <Tipo> Identificador ';'
+<DeclaracaoDeTypedef> ::= 'typedef' <Tipo> Identificador ';'
+                        | 'typedef' <DeclaracaoDeStruct> ';'
 
 <Bloco>     ::= '{' <ListaDeIntrucoes> '}'
             | '{' '}'
@@ -65,7 +66,9 @@ Caracter  = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | '%' | 
 <Declaracao>   ::= <DeclaracaoDeFuncao>
                 | <DeclaracaoDeProcedimento>
                 | <DeclaracaoDeInicio>
-                | <DeclaracaoDeBlocoVar>
+                | <DeclaracaoDeVar>
+                | <DeclaracaoDeConst>
+                | <DeclaracaoDeStruct>
                 | <DeclaracaoDeTypedef>
 
 <ListaDeIntrucoes>    ::= <Instrucao>  
@@ -76,6 +79,10 @@ Caracter  = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | '%' | 
 ! Exemplo das instruções: if, while, Chamada de função, print, scan, etc... ! TODO: Colocar os outros Statements aqui
 <Instrucao> ::= <InstrucaoNormal>
             | <EstruturaCondicional>
+            | <While>
+            | <DeclaracaoDeVar>
+            | <DeclaracaoDeConst>
+            | <DeclaracaoDeStruct>
 
 ! Instrução Normal são as insrtuções de unica linha que terminal com ';'
 ! Exemplo: a = b;, print();, scan();, chamadaDeFuncao();
@@ -93,13 +100,13 @@ Caracter  = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | '%' | 
 <Tipo>     ::= <TipoBase> | <TipoBase> <TipoVetorDeclarando>
 
 <TipoBase>   ::= <Escalar>
-            | struct Identificador
+            | 'struct' Identificador
             | Identificador
 
-<Escalar>    ::= int
-            | float
-            | bool
-            | string
+<Escalar>    ::= 'int'
+            | 'float'
+            | 'bool'
+            | 'string'
 
 ! Permite utilização de tipos vector, tando em inicialização de variáveis como em retorno de funções
 
@@ -199,81 +206,52 @@ Caracter  = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | '%' | 
 ! -------------------------------------------------------------------
 ! Declaração de Bloco Variáveis 
 ! -------------------------------------------------------------------
-<DeclaracaoDeBlocoVar> ::= var  '{'  <CorposDeclaracaoBlocoVar> '}'
-            
-<CorposDeclaracaoBlocoVar>
-          ::= <CorpoDeclaracaoBlocoVar>
-          | <CorpoDeclaracaoBlocoVar> <CorposDeclaracaoBlocoVar>
-          
-<CorpoDeclaracaoBlocoVar> 
-        ::= <Escalar>  <ExpressaoIdentificadoresVar>         
-        | Identificador  <ExpressaoIdentificadoresVar>  
-               
-<ExpressaoIdentificadoresVar> 
-          ::= <ExpressaoIdentificadorVar>  ';' 
-          |   <ExpressaoIdentificadorVar> ',' <ExpressaoIdentificadoresVar>
+<DeclaracaoDeVar>               ::= 'var'  '{'  <DeclaracaoDeVariavelCorpo> '}'
 
-<ExpressaoIdentificadorVar> 
-         ::= Identificador'=' Digitos
-          | Identificador
-          | Identificador'='Identificador
-          | '['']' Identificador
-          | '['']' '['']' Identificador
-          !! adicionar para receber retorno de função
-          
+<DeclaracaoDeVariavelCorpo>     ::= <DeclaracaoDeVariavelLinha>
+                                | <DeclaracaoDeVariavelLinha> <DeclaracaoDeVariavelCorpo>
+
+<DeclaracaoDeVariavelLinha>     ::= <Tipo> <ExpressaoIdentificadoresVar>
+
+<ExpressaoIdentificadoresVar>   ::= <ExpressaoIdentificadorVar>  ';' 
+                                | <ExpressaoIdentificadorVar> ',' <ExpressaoIdentificadoresVar>
+
+<ExpressaoIdentificadorVar>     ::= Identificador '=' <Expressao>
+                                | Identificador
+
 ! -------------------------------------------------------------------
 ! Declaração de Bloco Constante 
-! -------------------------------------------------------------------            
-          
-<DeclaracaoDeBlocoConst> 
-          ::= 'const'  '{'  <CorposDeclaracaoBlocoConst> '}'         
-            
-<CorposDeclaracaoBlocoConst>
-          ::= <CorpoDeclaracaoBlocoConst>
-          | <CorpoDeclaracaoBlocoConst> <CorposDeclaracaoBlocoConst>
-          
-<CorpoDeclaracaoBlocoConst> 
-        ::= <Escalar>  <ExpressaoIdentificadoresConst>         
-        | Identificador  <ExpressaoIdentificadoresConst>  
-              
-<ExpressaoIdentificadoresConst> 
-          ::= <ExpressaoIdentificadorConst>  ';' 
-          |   <ExpressaoIdentificadorConst> ',' <ExpressaoIdentificadoresConst>
+! -------------------------------------------------------------------
 
-<ExpressaoIdentificadorConst> 
-         ::= Identificador'=' Digitos
-          | Identificador'=' Identificador
-         !| Identificador'=' <EsxpressaoFuncao> !!!!!
-         !| Identificador'='<AcessoAEstrutura> e etc !!!!!     
+<DeclaracaoDeConst>             ::= 'const'  '{'  <DeclaracaoDeConstanteCorpo> '}'
 
+<DeclaracaoDeConstanteCorpo>    ::= <DeclaracaoDeConstanteLinha>
+                                | <DeclaracaoDeConstanteLinha> <DeclaracaoDeConstanteCorpo>
+
+<DeclaracaoDeConstanteLinha>    ::= <Tipo> <ExpressaoIdentificadoresConst>
+
+<ExpressaoIdentificadoresConst> ::= <ExpressaoIdentificadorConst> ';' 
+                                | <ExpressaoIdentificadorConst> ',' <ExpressaoIdentificadoresConst>
+
+<ExpressaoIdentificadorConst>   ::= Identificador '=' <Expressao>
 
 ! -------------------------------------------------------------------
 ! Declaração de Bloco Struct 
-! -------------------------------------------------------------------    
+! -------------------------------------------------------------------
 
-<DeclaracaoDeBlocoStruct> 
-          ::= 'struct' Identificador '{'  <CorposDeclaracaoBlocoStruct> '}'          
-            
-<CorposDeclaracaoBlocoStruct>
-          ::= <CorpoDeclaracaoBlocoStruct>
-          | <CorpoDeclaracaoBlocoStruct> <CorposDeclaracaoBlocoStruct>
-          
-<CorpoDeclaracaoBlocoStruct> 
-        ::= <Escalar>  <ExpressaoIdentificadoresStruct>         
-        | Identificador  <ExpressaoIdentificadoresStruct>  
-               
-<ExpressaoIdentificadoresStruct> 
-          ::= <ExpressaoIdentificadorStruct>  ';' 
-          |   <ExpressaoIdentificadorStruct> ',' <ExpressaoIdentificadoresStruct>
+<DeclaracaoDeStruct>       ::= 'struct' Identificador '{'  <DeclaracaoDeStructCorpo> '}'
+                                | 'struct' '{'  <DeclaracaoDeStructCorpo> '}'
 
-<ExpressaoIdentificadorStruct> 
-         ::= Identificador'='Digitos
-         | Identificador              
-         | Identificador'='Identificador
-         | '['']' Identificador
-         | '['']' '['']' Identificador          
-          
-!         
+<DeclaracaoDeStructCorpo>    ::= <DeclaracaoDeStructLinha>
+                                | <DeclaracaoDeStructLinha> <DeclaracaoDeStructCorpo>
+
+<DeclaracaoDeStructLinha>    ::= <Tipo> <ExpressaoIdentificadoresStruct>
+
+<ExpressaoIdentificadoresStruct> ::= <ExpressaoIdentificadorStruct> ';' 
+                                | <ExpressaoIdentificadorStruct> ',' <ExpressaoIdentificadoresStruct>
+
+<ExpressaoIdentificadorStruct>   ::= Identificador ! Campos em Struct não podem ser previamente iniciadas
+
 ! -------------------------------------------------------------------
 ! Estruturas condicionais: If...Then, If...Then...Else
 ! -------------------------------------------------------------------
