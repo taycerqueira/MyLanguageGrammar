@@ -28,7 +28,7 @@ Caracter  = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | '%' | 
 ! =================================================
 
 ! -------------------------------------------------
-! Declaração de Função, Procedimentos e método de início
+! Declaração de Função, Procedimentos, método de início e typedef
 ! -------------------------------------------------
 
 <DeclaracaoDeFuncao>  ::= 'function' <FuncID> '(' <Parametros> ')' <Bloco>
@@ -51,6 +51,8 @@ Caracter  = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | '%' | 
 
 <Parametro>      ::= <Tipo> Identificador
 
+<DeclaracaoTypedef> ::= typedef <Tipo> Identificador ';'
+
 ! -------------------------------------------------
 ! Base e instruções
 ! -------------------------------------------------
@@ -65,7 +67,8 @@ Caracter  = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | '%' | 
 <Declaracao>   ::= <DeclaracaoDeFuncao>
                 | <DeclaracaoDeProcedimento>
                 | <DeclaracaoDeInicio>
-                | <DeclaracaoDeBlocoVar> 
+                | <DeclaracaoDeBlocoVar>
+                | <DeclaracaoTypedef>
 
 <ListaDeIntrucoes>    ::= <Instrucao> 
                     | <Instrucao> <ListaDeIntrucoes>
@@ -124,13 +127,21 @@ Caracter  = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | '%' | 
                         | Identificador '=' <OpAdicao>
                         | <OpAdicao>
 
-<OpAdicao> ::= <OpAdicao> '+' <OpMult> ! TODO: Remover recursividade Esquerda e fatorar
-               | <OpAdicao> '-' <OpMult>
-               | <OpMult>
+!<OpAdicao> ::= <OpAdicao> '+' <OpMult> ! TODO: Remover recursividade Esquerda e fatorar
+!               | <OpAdicao> '-' <OpMult>
+!               | <OpMult>
 
-<OpMult>    ::= <OpMult> '*' <OpUnary> ! TODO: Remover recursividade Esquerda e fatorar
-               | <OpMult> '/' <OpUnary>
-               | <OpUnary>
+<OpAdicao> ::= <OpMult> <X> | <OpMult>
+<X> ::= <continuarAdicao> <X> | <continuarAdicao>
+<continuarAdicao> ::= '+' <OpMult> | '-' <OpMult>
+
+!<OpMult>    ::= <OpMult> '*' <OpUnary> ! TODO: Remover recursividade Esquerda e fatorar
+!               | <OpMult> '/' <OpUnary>
+!               | <OpUnary>
+
+<OpMult> ::= <OpUnary> <Z> | <OpUnary>
+<Z> ::= <continuarMult> <Z> |<continuarMult>
+<continuarMult> ::= '*' <OpUnary> | '/' <OpUnary>
 
 <OpUnary>   ::= '!' <OpUnary>
             | '++' <OpUnary>
@@ -152,6 +163,7 @@ Caracter  = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | '%' | 
             | Identificador '(' ')' ! Funcao sem parametros
             | Identificador ! Valor simples
             | '(' <Expressao> ')'
+            | Digitos
 
 ! -------------------------------------------------------------------
 ! Operação relacional e Lógica
