@@ -224,6 +224,59 @@ Caracter  = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | '%' | 
           | '['']' Identificador
           | '['']' '['']' Identificador
           !! adicionar para receber retorno de função
+          
+! -------------------------------------------------------------------
+! Declaração de Bloco Constante 
+! -------------------------------------------------------------------            
+          
+<DeclaracaoDeBlocoConst> 
+          ::= 'const'  '{'  <CorposDeclaracaoBlocoConst> '}'         
+            
+<CorposDeclaracaoBlocoConst>
+          ::= <CorpoDeclaracaoBlocoConst>
+          | <CorpoDeclaracaoBlocoConst> <CorposDeclaracaoBlocoConst>
+          
+<CorpoDeclaracaoBlocoConst> 
+        ::= <Escalar>  <ExpressaoIdentificadoresConst>         
+        | Identificador  <ExpressaoIdentificadoresConst>  
+              
+<ExpressaoIdentificadoresConst> 
+          ::= <ExpressaoIdentificadorConst>  ';' 
+          |   <ExpressaoIdentificadorConst> ',' <ExpressaoIdentificadoresConst>
+
+<ExpressaoIdentificadorConst> 
+         ::= Identificador'='Digitos
+          | Identificador'='Identificador
+         !| Identificador'='<EsxpressaoFuncao> !!!!!
+         !| Identificador'='<AcessoAEstrutura> e etc !!!!!     
+
+
+! -------------------------------------------------------------------
+! Declaração de Bloco Struct 
+! -------------------------------------------------------------------    
+
+<DeclaracaoDeBlocoStruct> 
+          ::= 'struct' Identificador '{'  <CorposDeclaracaoBlocoStruct> '}'          
+            
+<CorposDeclaracaoBlocoStruct>
+          ::= <CorpoDeclaracaoBlocoStruct>
+          | <CorpoDeclaracaoBlocoStruct> <CorposDeclaracaoBlocoStruct>
+          
+<CorpoDeclaracaoBlocoStruct> 
+        ::= <Escalar>  <ExpressaoIdentificadoresStruct>         
+        | Identificador  <ExpressaoIdentificadoresStruct>  
+               
+<ExpressaoIdentificadoresStruct> 
+          ::= <ExpressaoIdentificadorStruct>  ';' 
+          |   <ExpressaoIdentificadorStruct> ',' <ExpressaoIdentificadoresStruct>
+
+<ExpressaoIdentificadorStruct> 
+         ::= Identificador'='Digitos
+         | Identificador              
+         | Identificador'='Identificador
+         | '['']' Identificador
+         | '['']' '['']' Identificador          
+          
 !         
 ! -------------------------------------------------------------------
 ! Estruturas condicionais: If...Then, If...Then...Else
