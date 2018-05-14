@@ -74,8 +74,8 @@ Caracter  = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | '%' | 
 ! Instrução deve ser capaz de produzir todos os comandos que podem ficar dentro de um bloco
 ! Exemplo dos blocos: if, função, procedimento, while, etc... 
 ! Exemplo das instruções: if, while, Chamada de função, print, scan, etc... ! TODO: Colocar os outros Statements aqui
-<Instrucao> ::= <InstrucaoNormal> 
-            | 'if' '(' <ExpressaoRelacional> ')' <Bloco> ! TODO: Tirar daqui
+<Instrucao> ::= <InstrucaoNormal>
+            | <EstruturaCondicional>
 
 ! Instrução Normal são as insrtuções de unica linha que terminal com ';'
 ! Exemplo: a = b;, print();, scan();, chamadaDeFuncao();
@@ -277,12 +277,12 @@ Caracter  = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | '%' | 
 ! -------------------------------------------------------------------
 ! Estruturas condicionais: If...Then, If...Then...Else
 ! -------------------------------------------------------------------
-!  
-! <DeclaracaoEstruturaCondicional> ::= <IfThen>
-!                         | <IfThen> 'else' <Bloco>       
-!                                
-! <IfThen> ::= 'if' '(' <OperacaoRelacional> ')' 'then' <Bloco>
-! 
+
+<EstruturaCondicional>    ::= <IfThen>
+                                    | <IfThen> 'else' <Bloco>
+
+<IfThen> ::= 'if' '(' <ExpressaoRelacional> ')' 'then' <Bloco>
+
 ! -------------------------------------------------------------------
 ! Print
 ! Delimitador = /n /t
