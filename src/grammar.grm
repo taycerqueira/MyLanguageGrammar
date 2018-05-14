@@ -282,6 +282,12 @@ Caracter  = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | '%' | 
                                     | <IfThen> 'else' <Bloco>
 
 <IfThen> ::= 'if' '(' <ExpressaoRelacional> ')' 'then' <Bloco>
+          
+! -------------------------------------------------------------------
+! Estruturas condicionais: While
+! -------------------------------------------------------------------
+
+<While> ::= 'while' '(' <ExpressaoRelacional> ')' <Bloco>
 
 ! -------------------------------------------------------------------
 ! Print
