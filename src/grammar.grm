@@ -1,25 +1,25 @@
-﻿"Name"     = 'TODO: MyLanguage Grammar'
-"Author"   =  'TODO: List of Authors'
-"Version"  = '0.1'
-"About"    = 'TODO: MyLanguage Grammar,'
+﻿"Name"      = 'TODO: MyLanguage Grammar'
+"Author"    =  'TODO: List of Authors'
+"Version"   = '0.1'
+"About"     = 'TODO: MyLanguage Grammar,'
 
-"Case Sensitive" = True
-"Start Symbol" = <Programa>
+"Case Sensitive"    = True
+"Start Symbol"      = <Programa>
 
 ! =================================================
 ! Conjuntos de Caracteres
 ! =================================================
 
 {CabecaDoIdentificador} = {Letter}
-{CaudaDoIdentificador}       = {Alphanumeric} + [_]
+{CaudaDoIdentificador}  = {Alphanumeric} + [_]
 
 ! =================================================
 ! Símbolos Terminais
 ! =================================================
 
-Identificador      = {CabecaDoIdentificador}{CaudaDoIdentificador}*
-Digitos = ( '-' )? {Number}+ ( '.' {Number}+ )?
-Caracter  = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | '%' | '&' | '(' | ')' | '*' | '+'| ',' | '-' |'.' | '/' | '/' | ':' | ';' | '<' | '>' | '=' | '?' | '@' | '[' | ']' | '\' | '^' | '_' | '`'  | '{' | '|' | '}' | '~')* '"'
+identificador   = {CabecaDoIdentificador}{CaudaDoIdentificador}*
+Digitos         = ( '-' )? {Number}+ ( '.' {Number}+ )?
+Caracter        = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | '%' | '&' | '(' | ')' | '*' | '+'| ',' | '-' |'.' | '/' | '/' | ':' | ';' | '<' | '>' | '=' | '?' | '@' | '[' | ']' | '\' | '^' | '_' | '`'  | '{' | '|' | '}' | '~')* '"'
 
 ! =================================================
 ! Regras
@@ -29,41 +29,43 @@ Caracter  = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | '%' | 
 ! Declaração de Função, Procedimentos, método de início e typedef
 ! -------------------------------------------------
 
-<DeclaracaoDeFuncao>  ::= 'function' <FuncID> '(' <Parametros> ')' <Bloco>
-                        | 'function' <FuncID> '(' ')' <Bloco>
+<DeclaracaoDeFuncao>        ::= 'function' <FuncID> '(' <FuncaoProcedimentoFim>
 
-<DeclaracaoDeProcedimento> ::= 'procedure' <ProcID> '(' <Parametros> ')' <Bloco>
-                        | 'procedure' <ProcID> '(' ')' <Bloco>
-                                               
-<DeclaracaoDeInicio>     ::= 'start' '(' ')' <Bloco>
+<DeclaracaoDeProcedimento>  ::= 'procedure' Identificador '(' <FuncaoProcedimentoFim>
 
-<DeclaracaoDeTypedef> ::= 'typedef' <Tipo> Identificador ';'
-                        | 'typedef' <DeclaracaoDeStruct> ';'
+<FuncaoProcedimentoFim>     ::= <Parametros> ')' <Bloco> 
+                            | ')' <Bloco>
 
-<Bloco>     ::= '{' <ListaDeIntrucoes> '}'
-            | '{' '}'
+<DeclaracaoDeInicio>    ::= 'start' '(' ')' <Bloco>
+
+<DeclaracaoDeTypedef>       ::= 'typedef' <DeclaracaoDeTypedefAux>
+<DeclaracaoDeTypedefAux>    ::= <Tipo> Identificador ';'
+                            | <DeclaracaoDeStruct> ';'
+
+<Bloco>     ::= '{' <BlocoAux>
+<BlocoAux>  ::= <ListaDeIntrucoes> '}'
+            | '}'
 
 <FuncID>    ::= <Tipo> Identificador
 
-<ProcID>    ::= Identificador
+<Parametros>    ::= <Parametro> <ParametrosAux>
+<ParametrosAux> ::= ',' <Parametros>
+                | <> ! Produção Vazia
 
-<Parametros>    ::= <Parametro> ',' <Parametros>
-            | <Parametro>
-
-<Parametro>      ::= <Tipo> Identificador
+<Parametro>     ::= <Tipo> Identificador
 
 ! -------------------------------------------------
 ! Base e instruções
 ! -------------------------------------------------
 
-<Programa>    ::= <Declaracoes> 
+<Programa>      ::= <Declaracoes>
 
-<Declaracoes>  ::= <Declaracao> <Declaracoes>
+<Declaracoes>   ::= <Declaracao> <Declaracoes>
                 | <Declaracao> ! TODO: Adicionar produção vazia para caso do programa não ter declarações
 
 ! Aqui devem ficar apenas as estruturas que podem ser criadas fora de um Bloco
 ! Exemplo: Funções, Variaveis, Estruturas, Typedef, Procedimentos, Start
-<Declaracao>   ::= <DeclaracaoDeFuncao>
+<Declaracao>    ::= <DeclaracaoDeFuncao>
                 | <DeclaracaoDeProcedimento>
                 | <DeclaracaoDeInicio>
                 | <DeclaracaoDeVar>
@@ -71,7 +73,7 @@ Caracter  = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | '%' | 
                 | <DeclaracaoDeStruct>
                 | <DeclaracaoDeTypedef>
 
-<ListaDeIntrucoes>    ::= <Instrucao>  
+<ListaDeIntrucoes>    ::= <Instrucao>
                     | <Instrucao> <ListaDeIntrucoes>
 
 ! Instrução deve ser capaz de produzir todos os comandos que podem ficar dentro de um bloco
@@ -86,9 +88,8 @@ Caracter  = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | '%' | 
 
 ! Instrução Normal são as insrtuções de unica linha que terminal com ';'
 ! Exemplo: a = b;, print();, scan();, chamadaDeFuncao();
-<InstrucaoNormal>    ::= <OperacaoDeAtribuicao> ';' 
+<InstrucaoNormal>    ::= <OperacaoDeAtribuicao> ';'
                 | <InstrucaoDeRetorno> ';'
-                
 
 <InstrucaoDeRetorno>  ::= 'return' 
                     | 'return' <Expressao>
@@ -114,31 +115,29 @@ Caracter  = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | '%' | 
 
 <TipoVetorDeclarado>    ::= '[' ']'
 
-
 ! -------------------------------------------------
 ! Precedência de Operadores
 ! -------------------------------------------------
 
-
 ! TODO: Levels of operator precedence.
 
-<OperacaoDeAtribuicao> ::= <Final> '=' <Expressao>
+<OperacaoDeAtribuicao>  ::= <Final> '=' <Expressao>
                         | Identificador '=' <Expressao>
                         | <Expressao>
 
 ! Expressao diz respeito a qualquer conjunto de valores que podem ficar
 ! do lado direto de uma expressão de atribuição
-<Expressao>    ::= <OpAdicao>
+<Expressao>     ::= <OpAdicao>
 
-<ParametrosFuncao> ::= <OpAdicao> ',' <ParametrosFuncao>
-                | <OpAdicao> 
+<ParametrosFuncao>  ::= <OpAdicao> ',' <ParametrosFuncao>
+                    | <OpAdicao>
 
 !<OpAdicao> ::= <OpAdicao> '+' <OpMult> ! TODO: Remover recursividade Esquerda e fatorar
 !               | <OpAdicao> '-' <OpMult>
 !               | <OpMult>
 
-<OpAdicao> ::= <OpMult> <X> | <OpMult>
-<X> ::= <continuarAdicao> <X> | <continuarAdicao>
+<OpAdicao> ::= <OpMult> <OpMulAux1> | <OpMult>
+<OpMulAux1> ::= <continuarAdicao> <OpMulAux1> | <continuarAdicao>
 <continuarAdicao> ::= '+' <OpMult> | '-' <OpMult>
 
 !<OpMult>    ::= <OpMult> '*' <OpUnary> ! TODO: Remover recursividade Esquerda e fatorar
