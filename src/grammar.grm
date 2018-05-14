@@ -26,7 +26,7 @@ Caracter        = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | 
 ! =================================================
 
 ! -------------------------------------------------
-! Declaração de Função, Procedimentos, método de início e typedef
+! Declaração de Função, Procedimentos, método de início
 ! -------------------------------------------------
 
 <DeclaracaoDeFuncao>        ::= 'function' <FuncID> '(' <FuncaoProcedimentoFim>
@@ -37,10 +37,6 @@ Caracter        = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | 
                             | ')' <Bloco>
 
 <DeclaracaoDeInicio>    ::= 'start' '(' ')' <Bloco>
-
-<DeclaracaoDeTypedef>       ::= 'typedef' <DeclaracaoDeTypedefAux>
-<DeclaracaoDeTypedefAux>    ::= <Tipo> Identificador ';'
-                            | <DeclaracaoDeStruct> ';'
 
 <Bloco>     ::= '{' <BlocoAux>
 <BlocoAux>  ::= <ListaDeIntrucoes> '}'
@@ -53,6 +49,14 @@ Caracter        = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | 
                 | <> ! Produção Vazia
 
 <Parametro>     ::= <Tipo> Identificador
+
+! -------------------------------------------------
+! Declaração de Tipo (Typedef)
+! -------------------------------------------------
+
+<DeclaracaoDeTypedef>       ::= 'typedef' <DeclaracaoDeTypedefAux>
+<DeclaracaoDeTypedefAux>    ::= <Tipo> Identificador ';'
+                            | <DeclaracaoDeStruct> ';'
 
 ! -------------------------------------------------
 ! Base e instruções
