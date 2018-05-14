@@ -1,4 +1,0 @@
-function nomeDaFuncao () {
-    nomeDaFuncao();
-    algumaOutraVariavel = nomeDaFuncao();
-}

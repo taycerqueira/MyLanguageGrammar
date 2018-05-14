@@ -1,3 +1,0 @@
-start(){
-    operacao.algo.outro = algumacoisa;
-}

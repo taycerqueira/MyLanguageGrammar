@@ -1,4 +1,0 @@
-procedur nomeDoProcedimento ( ) {
-    nomeDaFuncao();
-    algumaOutraVariavel = nomeDaFuncao();
-}
