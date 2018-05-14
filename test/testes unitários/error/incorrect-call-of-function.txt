@@ -1,0 +1,9 @@
+function int nomeDaFuncao () {
+    nomeDaFuncao();
+    algumaOutraVariavel = nomeDaFuncao();
+    return algo;
+}
+
+procedure nomeDoProcedimento ( ) {
+    algo = nomeDaFuncao(;
+}
