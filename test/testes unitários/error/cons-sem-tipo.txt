@@ -1,0 +1,5 @@
+start (){
+     const{
+	numero = 10;
+     }
+}
