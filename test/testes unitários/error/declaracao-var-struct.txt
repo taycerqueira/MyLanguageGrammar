@@ -1,4 +1,4 @@
-//n„o ser· permitido declarar e inst‚nciar a struct ao mesmo tempo
+//n√£o ser√° permitido declarar e inst√¢nciar a struct ao mesmo tempo
 
 var{
     struct extends estruturaPreviamenteCriada { 

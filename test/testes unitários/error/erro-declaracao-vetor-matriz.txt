@@ -1,0 +1,10 @@
+start(){
+
+    int[20] vetor;
+    "string"[] vetor; //isso é erro semântico ou sintático?
+    int vetor[10];
+    string[][5] vetor;
+    string[];
+    bool[] funcao();
+
+}
