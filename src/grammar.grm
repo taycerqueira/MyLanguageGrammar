@@ -20,8 +20,7 @@
 
 identificador   = {CabecaDoIdentificador}{CaudaDoIdentificador}*
 Digitos         = ( '-' )? {Number}+ ( '.' {Number}+ )?
-Caracter        = '"'({StringSimbolos}|'\'{Printable})*'"'
-booleano        =  'true' | 'false'  
+CadeiaDeCaracteres        = '"' ({StringSimbolos} | '\' {Printable})* '"'
 
 ! =================================================
 ! Regras
@@ -93,8 +92,6 @@ booleano        =  'true' | 'false'
 <Instrucao> ::= <InstrucaoNormal>
             | <EstruturaCondicional>
             | <While>
-            | <Print>
-            | <Scan>
             | <DeclaracaoDeVar>
             | <DeclaracaoDeConst>
             | <DeclaracaoDeStruct>
@@ -103,6 +100,8 @@ booleano        =  'true' | 'false'
 ! Exemplo: a = b;, print();, scan();, chamadaDeFuncao();
 <InstrucaoNormal>   ::= <OperacaoDeAtribuicao> ';'
                     | <InstrucaoDeRetorno> ';'
+                    | <Print> ';'
+                    | <Scan> ';'
 
 <InstrucaoDeRetorno>    ::= 'return' <InstrucaoDeRetornoAux>
 <InstrucaoDeRetornoAux> ::= <Expressao> 
@@ -178,6 +177,7 @@ booleano        =  'true' | 'false'
 <Valor>     ::= Identificador <ValorAux1>
             | '(' <Expressao> ')'
             | Digitos
+            | CadeiaDeCaracteres
 <ValorAux1> ::= '(' <ValorAux2>
             | <> ! Produção Vazia
 <ValorAux2> ::=  <ParametrosFuncao> ')' ! Função ou procedimento com parametros
@@ -282,7 +282,7 @@ booleano        =  'true' | 'false'
                             | <>
 
 <IfThen> ::= 'if' '(' <ExpressaoRelacional> ')' 'then' <Bloco>
-          
+
 ! -------------------------------------------------------------------
 ! Estruturas condicionais: While
 ! -------------------------------------------------------------------
@@ -293,8 +293,12 @@ booleano        =  'true' | 'false'
 ! Print & Scan
 ! -------------------------------------------------------------------
 
-<Print> ::= 'print' '(' <Final> <OutrosFinais> ')' ';'
-         <OutrosFinais> ::= ',' <Final> <OutrosFinais> |
-                         
-<Scan> ::= 'scan' '(' <Final> <OutrasEntradas> ')' ';'
-         <OutrasEntradas> ::= ',' <Final> <OutrasEntradas> |
+<Print>         ::= 'print' '(' <Saida> <OutrasSaidas> ')'
+<Saida>           ::= <Final> | <Valor>
+<OutrasSaidas>  ::= ',' <Saida> <OutrasSaidas> 
+                | <> ! Produção Vazia
+
+<Scan>              ::= 'scan' '(' <Entrada> <OutrasEntradas> ')'
+<Entrada>           ::= <Final> | Identificador
+<OutrasEntradas>    ::= ',' <Entrada> <OutrasEntradas> 
+                    | <> ! Produção Vazia
