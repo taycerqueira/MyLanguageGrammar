@@ -1,0 +1,12 @@
+start(){
+
+    vetor1[] = 50;
+    vetor2[0][] = 35.7;
+    print() = vetor3[4];
+    vetor5{9};
+    vetor[i || j] = 5;
+    vetor[k<n] = 3;
+    vetor["teste"] = "teste";
+    vetor[!identificador] = true;
+
+}

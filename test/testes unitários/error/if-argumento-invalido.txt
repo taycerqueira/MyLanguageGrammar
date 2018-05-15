@@ -1,7 +1,0 @@
-start (){
-
-     if("nome")
-	if(0)
-	     print("oi");
-
-}
