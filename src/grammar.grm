@@ -118,6 +118,7 @@ CadeiaDeCaracteres        = '"' ({StringSimbolos} | '\' {Printable})* '"'
 <TipoBase>  ::= <Escalar>
             | <DeclaracaoDeStruct>
             | Identificador
+            | 'struct' Identificador
 
 <Escalar>   ::= 'int'
             | 'float'
