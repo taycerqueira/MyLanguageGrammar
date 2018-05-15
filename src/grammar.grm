@@ -154,7 +154,7 @@ CadeiaDeCaracteres        = '"' ({StringSimbolos} | '\' {Printable})* '"'
                 | <> ! Produção Vazia
 
 <OpE>   ::= <OpRelacional> <OpEAux>
-<OpAux> ::= '&&' <OpE>
+<OpEAux> ::= '&&' <OpE>
         | <> ! Produção Vazia
 
 <OpRelacional>      ::= <ValorRelacional> <OpRelacionalAux>
