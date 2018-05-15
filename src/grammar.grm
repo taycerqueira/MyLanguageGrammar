@@ -21,6 +21,7 @@
 identificador   = {CabecaDoIdentificador}{CaudaDoIdentificador}*
 Digitos         = ( '-' )? {Number}+ ( '.' {Number}+ )?
 Caracter        = '"'({StringSimbolos}|'\'{Printable})*'"'
+booleano        =  'true' | 'false'  
 
 ! =================================================
 ! Regras
@@ -92,6 +93,8 @@ Caracter        = '"'({StringSimbolos}|'\'{Printable})*'"'
 <Instrucao> ::= <InstrucaoNormal>
             | <EstruturaCondicional>
             | <While>
+            | <Print>
+            | <Scan>
             | <DeclaracaoDeVar>
             | <DeclaracaoDeConst>
             | <DeclaracaoDeStruct>
@@ -287,18 +290,11 @@ Caracter        = '"'({StringSimbolos}|'\'{Printable})*'"'
 <While> ::= 'while' '(' <ExpressaoRelacional> ')' <Bloco>
 
 ! -------------------------------------------------------------------
-! Print
-! Delimitador = /n /t
+! Print & Scan
 ! -------------------------------------------------------------------
 
-!Comentei esse trecho porque está dando erro
-!<print> ::= 'print' '(' <Identificador | <Identificador> <var> <identificador> |
-                        !|<Identificador> <var>
-                        !|<var> <Identificador>
-                        !| ')' ';''
-
-!<printf> ::= 'printf' '(<Identificador> + <delimitador>)' ';' 
-!   
-!   Fiquei na dúvida se já poderia ser assim:
-!
-!<printf> ::= 'printf' '(<Identificador> + '\n'>)' ';'
+<Print> ::= 'print' '(' <Final> <OutrosFinais> ')' ';'
+         <OutrosFinais> ::= ',' <Final> <OutrosFinais> |
+                         
+<Scan> ::= 'scan' '(' <Final> <OutrasEntradas> ')' ';'
+         <OutrasEntradas> ::= ',' <Final> <OutrasEntradas> |
