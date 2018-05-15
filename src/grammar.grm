@@ -133,34 +133,27 @@ Caracter        = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | 
 ! Precedência de Operadores
 ! -------------------------------------------------
 
-! TODO: Levels of operator precedence.
-
 <OperacaoDeAtribuicao>  ::= <Final> '=' <Expressao>
                         | Identificador '=' <Expressao>
                         | <Expressao>
 
+
+<ParametrosFuncao>      ::= <Expressao> <ParametrosFuncaoAux>
+<ParametrosFuncaoAux>   ::= ',' <ParametrosFuncao>
+                        | <>
+
 ! Expressao diz respeito a qualquer conjunto de valores que podem ficar
 ! do lado direto de uma expressão de atribuição
-<Expressao>     ::= <OpAdicao>
 
-<ParametrosFuncao>  ::= <OpAdicao> ',' <ParametrosFuncao>
-                    | <OpAdicao>
+<Expressao> ::= <OpMult> <ExpressaoAux>
+<ExpressaoAux>     ::= '+' <OpMult> <ExpressaoAux>
+        | '-' <OpMult> <ExpressaoAux>
+        | <>
 
-!<OpAdicao> ::= <OpAdicao> '+' <OpMult> ! TODO: Remover recursividade Esquerda e fatorar
-!               | <OpAdicao> '-' <OpMult>
-!               | <OpMult>
-
-<OpAdicao> ::= <OpMult> <OpMulAux1> | <OpMult>
-<OpMulAux1> ::= <continuarAdicao> <OpMulAux1> | <continuarAdicao>
-<continuarAdicao> ::= '+' <OpMult> | '-' <OpMult>
-
-!<OpMult>    ::= <OpMult> '*' <OpUnary> ! TODO: Remover recursividade Esquerda e fatorar
-!               | <OpMult> '/' <OpUnary>
-!               | <OpUnary>
-
-<OpMult> ::= <OpUnary> <Z> | <OpUnary>
-<Z> ::= <continuarMult> <Z> |<continuarMult>
-<continuarMult> ::= '*' <OpUnary> | '/' <OpUnary>
+<OpMult>        ::= <OpUnary> <OpMultAux>
+<OpMultAux>     ::= '*' <OpUnary> <OpMultAux>
+                | '/' <OpUnary> <OpMultAux>
+                | <>
 
 <OpUnary>   ::= '!' <OpUnary>
             | '++' <OpUnary>
@@ -170,19 +163,21 @@ Caracter        = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | 
 
 <Final>     ::= Identificador <Acessando> 
 
-<Acessando>        ::= <Acesso> | <Acesso> <Acessando> 
+<Acessando>     ::= <Acesso> <AcessandoAux>
+<AcessandoAux>  ::= <Acessando>
+                | <>
 
 <Acesso>        ::= '.' Identificador ! Acesso de campo
                 | '[' <Valor> ']' ! Acesso de array
 
-
-! <Valor> must be the last level of precedence
-
-<Valor>     ::= Identificador '(' <ParametrosFuncao> ')' ! Função ou procedimento com parametros
-            | Identificador '(' ')' ! Função ou procedimento sem parametros
-            | Identificador ! Valor simples
+! <Valor> deve ser o ultimo nível de precedência
+<Valor>     ::= Identificador <ValorAux1>
             | '(' <Expressao> ')'
             | Digitos
+<ValorAux1> ::= '(' <ValorAux2>
+            | <>
+<ValorAux2> ::=  <ParametrosFuncao> ')' ! Função ou procedimento com parametros
+            | ')' ! Função ou procedimento sem parametros
 
 ! -------------------------------------------------------------------
 ! Operação relacional e Lógica
@@ -191,18 +186,16 @@ Caracter        = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | 
 <ExpressaoRelacional>   ::=  <OpLogica>
                         | '!' <OpLogica> 
 
-<OpLogica>        ::= <OpLogica> <EscalarLogico> <OpRelacional>
-                        | <OpRelacional>
+<OpLogica>      ::= <OpLogica> <EscalarLogico> <OpRelacional>
+                | <OpRelacional>
 
-<OpRelacional>    ::= <OpRelacional> <EscalarRelacional> <ValorRelacional>
-                        | <ValorRelacional>
-                        | <Final>
+<EscalarLogico>       
+        ::= '&&'
+        | '||'
 
-<ValorRelacional> ::= Identificador '(' <ParametrosFuncao> ')' ! Função ou procedimento com parametros
-            | Identificador '(' ')' ! Função ou procedimento sem parametros
-            | Identificador ! Valor simples
-            | '(' <ExpressaoRelacional> ')'
-            | Digitos
+<OpRelacional>  ::= <OpRelacional> <EscalarRelacional> <ValorRelacional>
+                | <ValorRelacional>
+                | <Final>
 
 <EscalarRelacional> 
       ::= '!='
@@ -212,9 +205,16 @@ Caracter        = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | 
         |'>'
         |'>='
 
-<EscalarLogico>       
-        ::= '&&'
-        | '||'
+! <ValorRelacional> deve ser o ultimo nível de precedência
+<ValorRelacional>   ::= Identificador <ValorRelacionalAux1>
+                    | '(' <ExpressaoRelacional> ')'
+                    | Digitos
+
+<ValorRelacionalAux1> ::= '(' <ValorRelacionalAux2>
+            | <>
+
+<ValorRelacionalAux2> ::=  <ParametrosFuncao> ')' ! Função ou procedimento com parametros
+            | ')' ! Função ou procedimento sem parametros
 
 ! -------------------------------------------------------------------
 ! Declaração de Bloco Variáveis 
