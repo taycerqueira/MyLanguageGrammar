@@ -1,5 +1,3 @@
-//não será permitido declarar e instânciar a struct ao mesmo tempo
-
 var{
     struct extends estruturaPreviamenteCriada { 
         int novoCampoQueNaoTemNaPreviamenteCriasa;
