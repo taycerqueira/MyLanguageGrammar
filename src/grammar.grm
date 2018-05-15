@@ -59,13 +59,13 @@ Caracter        = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | 
                             | <DeclaracaoDeStruct> ';'
 
 ! -------------------------------------------------
-! Base e instruções
+! Base (Core)
 ! -------------------------------------------------
 
-<Programa>      ::= <Declaracoes>
-
-<Declaracoes>   ::= <Declaracao> <Declaracoes>
-                | <Declaracao> ! TODO: Adicionar produção vazia para caso do programa não ter declarações
+<Programa>      ::= <Declaracao> <ProgramaAux>
+                | <> ! Produção Vazia
+<ProgramaAux>   ::= <Programa>
+                | <> ! Produção Vazia
 
 ! Aqui devem ficar apenas as estruturas que podem ser criadas fora de um Bloco
 ! Exemplo: Funções, Variaveis, Estruturas, Typedef, Procedimentos, Start
@@ -77,8 +77,13 @@ Caracter        = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | 
                 | <DeclaracaoDeStruct>
                 | <DeclaracaoDeTypedef>
 
-<ListaDeIntrucoes>    ::= <Instrucao>
-                    | <Instrucao> <ListaDeIntrucoes>
+! -------------------------------------------------
+! Instruções
+! -------------------------------------------------
+
+<ListaDeIntrucoes>      ::= <Instrucao> <ListaDeIntrucoesAux>
+<ListaDeIntrucoesAux>   ::= <ListaDeIntrucoes>
+                        | <> ! Produção Vazia
 
 ! Instrução deve ser capaz de produzir todos os comandos que podem ficar dentro de um bloco
 ! Exemplo dos blocos: if, função, procedimento, while, etc... 
@@ -92,30 +97,35 @@ Caracter        = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | 
 
 ! Instrução Normal são as insrtuções de unica linha que terminal com ';'
 ! Exemplo: a = b;, print();, scan();, chamadaDeFuncao();
-<InstrucaoNormal>    ::= <OperacaoDeAtribuicao> ';'
-                | <InstrucaoDeRetorno> ';'
+<InstrucaoNormal>   ::= <OperacaoDeAtribuicao> ';'
+                    | <InstrucaoDeRetorno> ';'
 
-<InstrucaoDeRetorno>  ::= 'return' 
-                    | 'return' <Expressao>
+<InstrucaoDeRetorno>    ::= 'return' <InstrucaoDeRetornoAux>
+<InstrucaoDeRetornoAux> ::= <Expressao> 
+                        | <>
 
 ! -------------------------------------------------
 ! Tipos
 ! -------------------------------------------------
 
-<Tipo>     ::= <TipoBase> | <TipoBase> <TipoVetorDeclarando>
+<Tipo>      ::= <TipoBase> <TipoAux>
+<TipoAux>   ::= <TipoVetorDeclarando>
+            | <>
 
-<TipoBase>   ::= <Escalar>
+<TipoBase>  ::= <Escalar>
             | 'struct' Identificador
             | Identificador
 
-<Escalar>    ::= 'int'
+<Escalar>   ::= 'int'
             | 'float'
             | 'bool'
             | 'string'
 
 ! Permite utilização de tipos vector, tando em inicialização de variáveis como em retorno de funções
 
-<TipoVetorDeclarando>   ::= <TipoVetorDeclarado> | <TipoVetorDeclarado> <TipoVetorDeclarando>
+<TipoVetorDeclarando>       ::= <TipoVetorDeclarado> <TipoVetorDeclarandoAux>
+<TipoVetorDeclarandoAux>    ::= <TipoVetorDeclarando>
+                            | <>
 
 <TipoVetorDeclarado>    ::= '[' ']'
 
