@@ -3,7 +3,7 @@ start() {
    int dividendo, divisor;
    
    printf("Digite o valor do dividendo:");
-   scan(dividendo)
+   scan(dividendo);
    
    printf("\nDigite o valor do divisor:");
    scan(divisor);   
