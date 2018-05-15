@@ -63,7 +63,7 @@ Caracter        = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | 
 ! -------------------------------------------------
 
 <Programa>      ::= <Declaracao> <ProgramaAux>
-                | <> ! Produção Vazia
+
 <ProgramaAux>   ::= <Programa>
                 | <> ! Produção Vazia
 
@@ -189,32 +189,28 @@ Caracter        = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | 
 <OpLogica>      ::= <OpLogica> <EscalarLogico> <OpRelacional>
                 | <OpRelacional>
 
-<EscalarLogico>       
-        ::= '&&'
-        | '||'
+<EscalarLogico> ::= '&&'
+                | '||'
 
 <OpRelacional>  ::= <OpRelacional> <EscalarRelacional> <ValorRelacional>
                 | <ValorRelacional>
                 | <Final>
 
-<EscalarRelacional> 
-      ::= '!='
-        | '=='
-        | '<'
-        | '<='
-        |'>'
-        |'>='
+<EscalarRelacional> ::= '!='
+                    | '=='
+                    | '<'
+                    | '<='
+                    |'>'
+                    |'>='
 
 ! <ValorRelacional> deve ser o ultimo nível de precedência
 <ValorRelacional>   ::= Identificador <ValorRelacionalAux1>
                     | '(' <ExpressaoRelacional> ')'
                     | Digitos
-
-<ValorRelacionalAux1> ::= '(' <ValorRelacionalAux2>
-            | <>
-
-<ValorRelacionalAux2> ::=  <ParametrosFuncao> ')' ! Função ou procedimento com parametros
-            | ')' ! Função ou procedimento sem parametros
+<ValorRelacionalAux1>   ::= '(' <ValorRelacionalAux2>
+                        | <>
+<ValorRelacionalAux2>   ::=  <ParametrosFuncao> ')' ! Função ou procedimento com parametros
+                        | ')' ! Função ou procedimento sem parametros
 
 ! -------------------------------------------------------------------
 ! Declaração de Bloco Variáveis 
