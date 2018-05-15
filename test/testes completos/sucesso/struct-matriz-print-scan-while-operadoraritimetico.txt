@@ -1,0 +1,33 @@
+start(){
+
+    struct Alunos{
+        string nome;
+        float matematica, fisica, media;
+    };
+
+    struct Alunos alunos[5];
+    int count;
+
+    while(count < 5){   
+
+        print("Nome do aluno: ", count + 1);
+        scan(alunos[count].nome);
+
+        print("Nota de matematica: ");
+        scan(alunos[count].matematica);
+
+        print("Nota de fisica: ");
+        scan(alunos[count].fisica);
+
+        alunos[count].media = (alunos[count].matematica + alunos[count].fisica)/2;
+    }
+
+    print("\nExibindo nomes e medias:\n");
+
+    while(count < 5){
+        print("Aluno ", count + 1);
+        print("Nome: ", alunos[count].nome);
+        print("Media:", alunos[count].media);
+    }
+
+}

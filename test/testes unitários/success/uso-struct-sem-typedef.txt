@@ -1,0 +1,13 @@
+start(){
+
+  struct fichaAluno{
+    string nome;
+    string disciplina;
+    float nota_prova1;
+    float nota_prova2;  
+  };
+
+  struct fichaAluno aluno;
+  aluno.nome = "Joãozinho";
+
+}
