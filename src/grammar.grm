@@ -102,7 +102,7 @@ Caracter        = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | 
 
 <InstrucaoDeRetorno>    ::= 'return' <InstrucaoDeRetornoAux>
 <InstrucaoDeRetornoAux> ::= <Expressao> 
-                        | <>
+                        | <> ! Produção Vazia
 
 ! -------------------------------------------------
 ! Tipos
@@ -110,7 +110,7 @@ Caracter        = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | 
 
 <Tipo>      ::= <TipoBase> <TipoAux>
 <TipoAux>   ::= <TipoVetorDeclarando>
-            | <>
+            | <> ! Produção Vazia
 
 <TipoBase>  ::= <Escalar>
             | 'struct' Identificador
@@ -125,7 +125,7 @@ Caracter        = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | 
 
 <TipoVetorDeclarando>       ::= <TipoVetorDeclarado> <TipoVetorDeclarandoAux>
 <TipoVetorDeclarandoAux>    ::= <TipoVetorDeclarando>
-                            | <>
+                            | <> ! Produção Vazia
 
 <TipoVetorDeclarado>    ::= '[' ']'
 
@@ -140,7 +140,7 @@ Caracter        = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | 
 
 <ParametrosFuncao>      ::= <Expressao> <ParametrosFuncaoAux>
 <ParametrosFuncaoAux>   ::= ',' <ParametrosFuncao>
-                        | <>
+                        | <> ! Produção Vazia
 
 ! Expressao diz respeito a qualquer conjunto de valores que podem ficar
 ! do lado direto de uma expressão de atribuição
@@ -148,12 +148,12 @@ Caracter        = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | 
 <Expressao> ::= <OpMult> <ExpressaoAux>
 <ExpressaoAux>     ::= '+' <OpMult> <ExpressaoAux>
         | '-' <OpMult> <ExpressaoAux>
-        | <>
+        | <> ! Produção Vazia
 
 <OpMult>        ::= <OpUnary> <OpMultAux>
 <OpMultAux>     ::= '*' <OpUnary> <OpMultAux>
                 | '/' <OpUnary> <OpMultAux>
-                | <>
+                | <> ! Produção Vazia
 
 <OpUnary>   ::= '!' <OpUnary>
             | '++' <OpUnary>
@@ -165,7 +165,7 @@ Caracter        = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | 
 
 <Acessando>     ::= <Acesso> <AcessandoAux>
 <AcessandoAux>  ::= <Acessando>
-                | <>
+                | <> ! Produção Vazia
 
 <Acesso>        ::= '.' Identificador ! Acesso de campo
                 | '[' <Valor> ']' ! Acesso de array
@@ -175,7 +175,7 @@ Caracter        = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | 
             | '(' <Expressao> ')'
             | Digitos
 <ValorAux1> ::= '(' <ValorAux2>
-            | <>
+            | <> ! Produção Vazia
 <ValorAux2> ::=  <ParametrosFuncao> ')' ! Função ou procedimento com parametros
             | ')' ! Função ou procedimento sem parametros
 
@@ -208,7 +208,7 @@ Caracter        = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | 
                     | '(' <ExpressaoRelacional> ')'
                     | Digitos
 <ValorRelacionalAux1>   ::= '(' <ValorRelacionalAux2>
-                        | <>
+                        | <> ! Produção Vazia
 <ValorRelacionalAux2>   ::=  <ParametrosFuncao> ')' ! Função ou procedimento com parametros
                         | ')' ! Função ou procedimento sem parametros
 
@@ -217,16 +217,19 @@ Caracter        = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | 
 ! -------------------------------------------------------------------
 <DeclaracaoDeVar>               ::= 'var'  '{'  <DeclaracaoDeVariavelCorpo> '}'
 
-<DeclaracaoDeVariavelCorpo>     ::= <DeclaracaoDeVariavelLinha>
-                                | <DeclaracaoDeVariavelLinha> <DeclaracaoDeVariavelCorpo>
+<DeclaracaoDeVariavelCorpo>     ::= <DeclaracaoDeVariavelLinha> <DeclaracaoDeVariavelCorpoAux>
+<DeclaracaoDeVariavelCorpoAux>  ::= <DeclaracaoDeVariavelCorpo>
+                                | <> ! Produção Vazia 
 
 <DeclaracaoDeVariavelLinha>     ::= <Tipo> <ExpressaoIdentificadoresVar>
 
-<ExpressaoIdentificadoresVar>   ::= <ExpressaoIdentificadorVar>  ';' 
-                                | <ExpressaoIdentificadorVar> ',' <ExpressaoIdentificadoresVar>
+<ExpressaoIdentificadoresVar>       ::= <ExpressaoIdentificadorVar> <ExpressaoIdentificadoresVarAux>
+<ExpressaoIdentificadoresVarAux>    ::= ';'
+                                    | ',' <ExpressaoIdentificadoresVar>
 
-<ExpressaoIdentificadorVar>     ::= Identificador '=' <Expressao>
-                                | Identificador
+<ExpressaoIdentificadorVar>     ::= Identificador <ExpressaoIdentificadorVarAux>
+<ExpressaoIdentificadorVarAux>  ::=  '=' <Expressao>
+                                | <> ! Produção Vazia
 
 ! -------------------------------------------------------------------
 ! Declaração de Bloco Constante 
@@ -234,13 +237,15 @@ Caracter        = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | 
 
 <DeclaracaoDeConst>             ::= 'const'  '{'  <DeclaracaoDeConstanteCorpo> '}'
 
-<DeclaracaoDeConstanteCorpo>    ::= <DeclaracaoDeConstanteLinha>
-                                | <DeclaracaoDeConstanteLinha> <DeclaracaoDeConstanteCorpo>
+<DeclaracaoDeConstanteCorpo>    ::= <DeclaracaoDeConstanteLinha> <DeclaracaoDeConstanteCorpoAux>
+<DeclaracaoDeConstanteCorpoAux> ::= <DeclaracaoDeConstanteCorpo>
+                                | <>
 
 <DeclaracaoDeConstanteLinha>    ::= <Tipo> <ExpressaoIdentificadoresConst>
 
-<ExpressaoIdentificadoresConst> ::= <ExpressaoIdentificadorConst> ';' 
-                                | <ExpressaoIdentificadorConst> ',' <ExpressaoIdentificadoresConst>
+<ExpressaoIdentificadoresConst>     ::= <ExpressaoIdentificadorConst> <ExpressaoIdentificadoresConstAux>
+<ExpressaoIdentificadoresConstAux>  ::= ';' 
+                                    | ',' <ExpressaoIdentificadoresConst>
 
 <ExpressaoIdentificadorConst>   ::= Identificador '=' <Expressao>
 
@@ -248,16 +253,19 @@ Caracter        = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | 
 ! Declaração de Bloco Struct 
 ! -------------------------------------------------------------------
 
-<DeclaracaoDeStruct>       ::= 'struct' Identificador '{'  <DeclaracaoDeStructCorpo> '}'
-                                | 'struct' '{'  <DeclaracaoDeStructCorpo> '}'
+<DeclaracaoDeStruct>    ::= 'struct' <DeclaracaoDeStructAux>
+<DeclaracaoDeStructAux> ::= Identificador '{'  <DeclaracaoDeStructCorpo> '}'
+                        | '{'  <DeclaracaoDeStructCorpo> '}'
 
-<DeclaracaoDeStructCorpo>    ::= <DeclaracaoDeStructLinha>
-                                | <DeclaracaoDeStructLinha> <DeclaracaoDeStructCorpo>
+<DeclaracaoDeStructCorpo>       ::= <DeclaracaoDeStructLinha> <DeclaracaoDeStructCorpoAux>
+<DeclaracaoDeStructCorpoAux>    ::= <DeclaracaoDeStructCorpo>
+                                | <>
 
 <DeclaracaoDeStructLinha>    ::= <Tipo> <ExpressaoIdentificadoresStruct>
 
-<ExpressaoIdentificadoresStruct> ::= <ExpressaoIdentificadorStruct> ';' 
-                                | <ExpressaoIdentificadorStruct> ',' <ExpressaoIdentificadoresStruct>
+<ExpressaoIdentificadoresStruct>    ::= <ExpressaoIdentificadorStruct> <ExpressaoIdentificadoresStructAux>
+<ExpressaoIdentificadoresStructAux> ::= ';'
+                                    | ',' <ExpressaoIdentificadoresStruct>
 
 <ExpressaoIdentificadorStruct>   ::= Identificador ! Campos em Struct não podem ser previamente iniciadas
 
@@ -265,8 +273,9 @@ Caracter        = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | 
 ! Estruturas condicionais: If...Then, If...Then...Else
 ! -------------------------------------------------------------------
 
-<EstruturaCondicional>    ::= <IfThen>
-                                    | <IfThen> 'else' <Bloco>
+<EstruturaCondicional>      ::= <IfThen> <EstruturaCondicionalAux>
+<EstruturaCondicionalAux>   ::= 'else' <Bloco>
+                            | <>
 
 <IfThen> ::= 'if' '(' <ExpressaoRelacional> ')' 'then' <Bloco>
           
