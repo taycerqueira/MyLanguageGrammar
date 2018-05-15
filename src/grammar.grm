@@ -57,7 +57,6 @@ CadeiaDeCaracteres        = '"' ({StringSimbolos} | '\' {Printable})* '"'
 
 <DeclaracaoDeTypedef>       ::= 'typedef' <DeclaracaoDeTypedefAux>
 <DeclaracaoDeTypedefAux>    ::= <Tipo> Identificador ';'
-                            | <DeclaracaoDeStruct> ';'
 
 ! -------------------------------------------------
 ! Base (Core)
@@ -116,7 +115,7 @@ CadeiaDeCaracteres        = '"' ({StringSimbolos} | '\' {Printable})* '"'
             | <> ! Produção Vazia
 
 <TipoBase>  ::= <Escalar>
-            | 'struct' Identificador
+            | <DeclaracaoDeStruct>
             | Identificador
 
 <Escalar>   ::= 'int'
@@ -178,6 +177,8 @@ CadeiaDeCaracteres        = '"' ({StringSimbolos} | '\' {Printable})* '"'
             | '(' <Expressao> ')'
             | Digitos
             | CadeiaDeCaracteres
+            | 'true'
+            | 'false'
 <ValorAux1> ::= '(' <ValorAux2>
             | <> ! Produção Vazia
 <ValorAux2> ::=  <ParametrosFuncao> ')' ! Função ou procedimento com parametros
@@ -211,6 +212,9 @@ CadeiaDeCaracteres        = '"' ({StringSimbolos} | '\' {Printable})* '"'
 <ValorRelacional>   ::= Identificador <ValorRelacionalAux1>
                     | '(' <ExpressaoRelacional> ')'
                     | Digitos
+                    | CadeiaDeCaracteres
+                    | 'true'
+                    | 'false'
 <ValorRelacionalAux1>   ::= '(' <ValorRelacionalAux2>
                         | <> ! Produção Vazia
 <ValorRelacionalAux2>   ::=  <ParametrosFuncao> ')' ! Função ou procedimento com parametros
@@ -257,9 +261,11 @@ CadeiaDeCaracteres        = '"' ({StringSimbolos} | '\' {Printable})* '"'
 ! Declaração de Bloco Struct 
 ! -------------------------------------------------------------------
 
-<DeclaracaoDeStruct>    ::= 'struct' <DeclaracaoDeStructAux>
-<DeclaracaoDeStructAux> ::= Identificador '{'  <DeclaracaoDeStructCorpo> '}'
-                        | '{'  <DeclaracaoDeStructCorpo> '}'
+<DeclaracaoDeStruct>    ::= 'struct' <DeclaracaoDeStructAux> ! TODO: Tem que adicionar o Extends
+<DeclaracaoDeStructAux> ::= Identificador <Extends>'{'  <DeclaracaoDeStructCorpo> '}'
+                        | <Extends>'{'  <DeclaracaoDeStructCorpo> '}'
+<Extends>               ::= 'extends' Identificador
+                        | <>
 
 <DeclaracaoDeStructCorpo>       ::= <DeclaracaoDeStructLinha> <DeclaracaoDeStructCorpoAux>
 <DeclaracaoDeStructCorpoAux>    ::= <DeclaracaoDeStructCorpo>
@@ -294,7 +300,7 @@ CadeiaDeCaracteres        = '"' ({StringSimbolos} | '\' {Printable})* '"'
 ! -------------------------------------------------------------------
 
 <Print>         ::= 'print' '(' <Saida> <OutrasSaidas> ')'
-<Saida>           ::= <Final> | <Valor>
+<Saida>           ::= <Final> | <Expressao>
 <OutrasSaidas>  ::= ',' <Saida> <OutrasSaidas> 
                 | <> ! Produção Vazia
 
