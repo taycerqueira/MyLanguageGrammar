@@ -1,0 +1,6 @@
+start (){
+
+     int numero, nota;
+     print(numero);
+
+}
