@@ -1,0 +1,24 @@
+start() {
+    
+    var{
+        int dividendo, divisor;
+    }
+
+    print("Digite o valor do dividendo:");
+    scan(dividendo);
+
+    print("\nDigite o valor do divisor:");
+    scan(divisor);   
+
+
+    if (divisor == 0) then {
+        print("-1\n");
+    } 
+
+    if ((dividendo / divisor < 0)) then {
+        print("Valor encontrado: 0\n");
+    } else {
+        print("Valor calculado: %d \n", (dividendo / divisor));
+    }
+   
+}
