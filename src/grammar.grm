@@ -148,14 +148,17 @@ CadeiaDeCaracteres        = '"' ({StringSimbolos} | '\' {Printable})* '"'
 ! Expressao diz respeito a qualquer conjunto de valores que podem ficar
 ! do lado direto de uma expressão de atribuição
 
-<Expressao> ::=  <OpE> '||' <Expressao>
-            | <OpE>
+<Expressao>     ::= <OpE> <ExpressaoAux>
+<ExpressaoAux>  ::= '||' <Expressao>
+                | <> ! Produção Vazia
 
-<OpE>   ::= <OpE> '&&' <OpRelacional>
-        | <OpRelacional>
+<OpE>   ::= <OpRelacional> <OpEAux>
+<OpAux> ::= '&&' <OpE>
+        | <> ! Produção Vazia
 
-<OpRelacional>  ::= <ValorRelacional> <EscalarRelacional> <OpRelacional>
-                | <ValorRelacional>
+<OpRelacional>      ::= <ValorRelacional> <OpRelacionalAux>
+<OpRelacionalAux>   ::= <EscalarRelacional> <OpRelacional>
+                    | <> ! Produção Vazia
 
 <EscalarRelacional> ::= '!='
                     | '=='
