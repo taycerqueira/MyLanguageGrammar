@@ -1,0 +1,22 @@
+start() {
+
+   int dividendo, divisor;
+   
+   printf("Digite o valor do dividendo:");
+   scan(dividendo);
+   
+   printf("\nDigite o valor do divisor:");
+   scan(divisor);   
+   
+   
+   if (divisor == 0) then {
+      printf("-1\n");
+   } 
+   else if ((dividendo / divisor < 0)) then {
+      printf("Valor encontrado: 0\n");
+   }
+   else {
+      printf("Valor calculado: %d \n", (dividendo / divisor));
+   }
+   
+}
