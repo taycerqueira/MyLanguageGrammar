@@ -12,6 +12,7 @@
 
 {CabecaDoIdentificador} = {Letter}
 {CaudaDoIdentificador}  = {Alphanumeric} + [_]
+{StringSimbolos}= {Printable}-["\]
 
 ! =================================================
 ! Símbolos Terminais
@@ -19,7 +20,7 @@
 
 identificador   = {CabecaDoIdentificador}{CaudaDoIdentificador}*
 Digitos         = ( '-' )? {Number}+ ( '.' {Number}+ )?
-Caracter        = '"'({Printable})*'"'
+Caracter        = '"'({StringSimbolos}|'\'{Printable})*'"'
 booleano        =  'true' | 'false'  
 
 ! =================================================
