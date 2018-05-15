@@ -19,7 +19,7 @@
 
 identificador   = {CabecaDoIdentificador}{CaudaDoIdentificador}*
 Digitos         = ( '-' )? {Number}+ ( '.' {Number}+ )?
-Caracter        = '"' ({Letter}|{Number}|'\"'| {Space} |'!' | '"' | '#' | '$' | '%' | '&' | '(' | ')' | '*' | '+'| ',' | '-' |'.' | '/' | '/' | ':' | ';' | '<' | '>' | '=' | '?' | '@' | '[' | ']' | '\' | '^' | '_' | '`'  | '{' | '|' | '}' | '~')* '"'
+Caracter        = '"'({Printable})*'"'
 
 ! =================================================
 ! Regras
