@@ -1,0 +1,5 @@
+start (){
+
+	int nome [] = 0;
+	int [];
+}
