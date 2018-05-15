@@ -93,12 +93,12 @@ CadeiaDeCaracteres        = '"' ({StringSimbolos} | '\' {Printable})* '"'
             | <While>
             | <DeclaracaoDeVar>
             | <DeclaracaoDeConst>
-            | <DeclaracaoDeStruct>
             | <DeclaracaoDeTypedef>
 
 ! Instrução Normal são as insrtuções de unica linha que terminal com ';'
 ! Exemplo: a = b;, print();, scan();, chamadaDeFuncao();
 <InstrucaoNormal>   ::= <OperacaoDeAtribuicao> ';'
+                    | <DeclaracaoDeStruct> ';'
                     | <InstrucaoDeRetorno> ';'
                     | <Print> ';'
                     | <Scan> ';'
