@@ -190,7 +190,7 @@ CadeiaDeCaracteres        = '"' ({StringSimbolos} | '\' {Printable})* '"'
                 | <> ! Produção Vazia
 
 <Acesso>        ::= '.' Identificador ! Acesso de campo
-                | '[' <Valor> ']' ! Acesso de array
+                | '[' <Expressao> ']' ! Acesso de array
 
 ! <Valor> deve ser o ultimo nível de precedência
 <Valor>     ::= Identificador <ValorAux1>
