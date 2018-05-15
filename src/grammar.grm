@@ -147,9 +147,26 @@ CadeiaDeCaracteres        = '"' ({StringSimbolos} | '\' {Printable})* '"'
 ! Expressao diz respeito a qualquer conjunto de valores que podem ficar
 ! do lado direto de uma expressão de atribuição
 
-<Expressao> ::= <OpMult> <ExpressaoAux>
-<ExpressaoAux>     ::= '+' <OpMult> <ExpressaoAux>
-        | '-' <OpMult> <ExpressaoAux>
+<Expressao> ::= <Expressao> '||' <OpE>
+            | <OpE>
+
+<OpE>   ::= <OpE> '&&' <OpRelacional>
+        | <OpRelacional>
+
+<OpRelacional>  ::= <ValorRelacional> <EscalarRelacional> <OpRelacional>
+                | <ValorRelacional>
+                | <Final>
+
+<EscalarRelacional> ::= '!='
+                    | '=='
+                    | '<'
+                    | '<='
+                    |'>'
+                    |'>='
+
+<ValorRelacional> ::= <OpMult> <ValorRelacionalAux>
+<ValorRelacionalAux>     ::= '+' <OpMult> <ValorRelacionalAux>
+        | '-' <OpMult> <ValorRelacionalAux>
         | <> ! Produção Vazia
 
 <OpMult>        ::= <OpUnary> <OpMultAux>
@@ -183,42 +200,6 @@ CadeiaDeCaracteres        = '"' ({StringSimbolos} | '\' {Printable})* '"'
             | <> ! Produção Vazia
 <ValorAux2> ::=  <ParametrosFuncao> ')' ! Função ou procedimento com parametros
             | ')' ! Função ou procedimento sem parametros
-
-! -------------------------------------------------------------------
-! Operação relacional e Lógica
-! -------------------------------------------------------------------
-
-<ExpressaoRelacional>   ::=  <OpLogica>
-                        | '!' <OpLogica> 
-
-<OpLogica>      ::= <OpLogica> <EscalarLogico> <OpRelacional>
-                | <OpRelacional>
-
-<EscalarLogico> ::= '&&'
-                | '||'
-
-<OpRelacional>  ::= <OpRelacional> <EscalarRelacional> <ValorRelacional>
-                | <ValorRelacional>
-                | <Final>
-
-<EscalarRelacional> ::= '!='
-                    | '=='
-                    | '<'
-                    | '<='
-                    |'>'
-                    |'>='
-
-! <ValorRelacional> deve ser o ultimo nível de precedência
-<ValorRelacional>   ::= Identificador <ValorRelacionalAux1>
-                    | '(' <ExpressaoRelacional> ')'
-                    | Digitos
-                    | CadeiaDeCaracteres
-                    | 'true'
-                    | 'false'
-<ValorRelacionalAux1>   ::= '(' <ValorRelacionalAux2>
-                        | <> ! Produção Vazia
-<ValorRelacionalAux2>   ::=  <ParametrosFuncao> ')' ! Função ou procedimento com parametros
-                        | ')' ! Função ou procedimento sem parametros
 
 ! -------------------------------------------------------------------
 ! Declaração de Bloco Variáveis 
@@ -300,7 +281,7 @@ CadeiaDeCaracteres        = '"' ({StringSimbolos} | '\' {Printable})* '"'
 ! -------------------------------------------------------------------
 
 <Print>         ::= 'print' '(' <Saida> <OutrasSaidas> ')'
-<Saida>           ::= <Final> | <Expressao>
+<Saida>           ::= <Expressao>
 <OutrasSaidas>  ::= ',' <Saida> <OutrasSaidas> 
                 | <> ! Produção Vazia
 
