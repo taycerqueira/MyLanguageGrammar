@@ -94,6 +94,7 @@ CadeiaDeCaracteres        = '"' ({StringSimbolos} | '\' {Printable})* '"'
             | <DeclaracaoDeVar>
             | <DeclaracaoDeConst>
             | <DeclaracaoDeStruct>
+            | <DeclaracaoDeTypedef>
 
 ! Instrução Normal são as insrtuções de unica linha que terminal com ';'
 ! Exemplo: a = b;, print();, scan();, chamadaDeFuncao();
@@ -147,7 +148,7 @@ CadeiaDeCaracteres        = '"' ({StringSimbolos} | '\' {Printable})* '"'
 ! Expressao diz respeito a qualquer conjunto de valores que podem ficar
 ! do lado direto de uma expressão de atribuição
 
-<Expressao> ::= <Expressao> '||' <OpE>
+<Expressao> ::=  <OpE> '||' <Expressao>
             | <OpE>
 
 <OpE>   ::= <OpE> '&&' <OpRelacional>
@@ -155,7 +156,6 @@ CadeiaDeCaracteres        = '"' ({StringSimbolos} | '\' {Printable})* '"'
 
 <OpRelacional>  ::= <ValorRelacional> <EscalarRelacional> <OpRelacional>
                 | <ValorRelacional>
-                | <Final>
 
 <EscalarRelacional> ::= '!='
                     | '=='
@@ -268,13 +268,13 @@ CadeiaDeCaracteres        = '"' ({StringSimbolos} | '\' {Printable})* '"'
 <EstruturaCondicionalAux>   ::= 'else' <Bloco>
                             | <>
 
-<IfThen> ::= 'if' '(' <ExpressaoRelacional> ')' 'then' <Bloco>
+<IfThen> ::= 'if' '(' <Expressao> ')' 'then' <Bloco>
 
 ! -------------------------------------------------------------------
 ! Estruturas condicionais: While
 ! -------------------------------------------------------------------
 
-<While> ::= 'while' '(' <ExpressaoRelacional> ')' <Bloco>
+<While> ::= 'while' '(' <Expressao> ')' <Bloco>
 
 ! -------------------------------------------------------------------
 ! Print & Scan
