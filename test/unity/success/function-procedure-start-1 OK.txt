@@ -1,4 +1,4 @@
-function int nomeDaFuncao () {
+function int nomeDaFuncao ( ) {
     nomeDaFuncao();
     algumaOutraVariavel = nomeDaFuncao();
     return;
@@ -9,6 +9,6 @@ procedure nomeDoProcedimento ( ) {
     algumaOutraVariavel = nomeDaFuncao();
 }
 
-start() {
+start ( ) {
     nomeDoProcedimento();
 }

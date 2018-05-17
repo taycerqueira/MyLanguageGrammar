@@ -1,14 +1,14 @@
-start(){
+start () {
 
-    typedef struct{ 
-        float peso;  
-        int idade;   
+    typedef struct{
+        float peso;
+        int idade; 
         float altura;
     } Pessoa;
 
-    var{
-        Pessoa joao, maria; 
-        Pessoa[] populacao; 
+    var {
+        Pessoa joao, maria;
+        Pessoa[] populacao;
     }
 
     joao.idade = 15;

@@ -9,6 +9,6 @@ procedure nomeDoProcedimento (tipoDefinidoPeloUsuario parametroDois, int algo) {
     algumaOutraVariavel = nomeDaFuncao(parametroDois, parametroUm);
 }
 
-start() {
+start () {
     nomeDoProcedimento();
 }

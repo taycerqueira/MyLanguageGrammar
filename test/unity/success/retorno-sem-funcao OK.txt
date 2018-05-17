@@ -1,4 +1,4 @@
-start (){
+start () {
    print("Ola, mundo");
    return 0;
 }

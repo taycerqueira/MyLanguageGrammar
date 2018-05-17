@@ -1,4 +1,3 @@
-start (){
-
-     typedef int integer;
+start () {
+    typedef int integer;
 }

@@ -1,4 +1,4 @@
-start (){
+start () {
 
      print ("Este eh um print", a, v[1], 3, nome.algo);
 

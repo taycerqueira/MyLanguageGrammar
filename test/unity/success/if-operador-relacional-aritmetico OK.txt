@@ -1,6 +1,6 @@
 start(){
 
-    if(a+b >= c)then{
+    if ( a + b >= c) then{
         print(a+b);
     }
 

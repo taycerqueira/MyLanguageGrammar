@@ -1,8 +1,8 @@
-start(){
-     var {
-	int numero, nota, total;
-	float media;
-	bool aprovado, final;
-	string nome;
-     }
+start () {
+    var {
+        int numero, nota, total;
+        float media;
+        bool aprovado, final;
+        string nome;
+    }
 }
