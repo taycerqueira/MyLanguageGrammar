@@ -87,7 +87,7 @@ CadeiaDeCaracteres        = '"' ({StringSimbolos} | '\' {Printable})* '"'
 
 ! Instrução deve ser capaz de produzir todos os comandos que podem ficar dentro de um bloco
 ! Exemplo dos blocos: if, função, procedimento, while, etc... 
-! Exemplo das instruções: if, while, Chamada de função, print, scan, etc... ! TODO: Colocar os outros Statements aqui
+! Exemplo das instruções: if, while, Chamada de função, print, scan, etc... 
 <Instrucao> ::= <InstrucaoNormal>
             | <EstruturaCondicional>
             | <While>
@@ -246,7 +246,7 @@ CadeiaDeCaracteres        = '"' ({StringSimbolos} | '\' {Printable})* '"'
 ! Declaração de Bloco Struct 
 ! -------------------------------------------------------------------
 
-<DeclaracaoDeStruct>    ::= 'struct' <DeclaracaoDeStructAux> ! TODO: Tem que adicionar o Extends
+<DeclaracaoDeStruct>    ::= 'struct' <DeclaracaoDeStructAux>
 <DeclaracaoDeStructAux> ::= Identificador <Extends>'{'  <DeclaracaoDeStructCorpo> '}'
                         | <Extends>'{'  <DeclaracaoDeStructCorpo> '}'
 <Extends>               ::= 'extends' Identificador
@@ -275,7 +275,7 @@ CadeiaDeCaracteres        = '"' ({StringSimbolos} | '\' {Printable})* '"'
 <IfThen> ::= 'if' '(' <Expressao> ')' 'then' <Bloco>
 
 ! -------------------------------------------------------------------
-! Estruturas condicionais: While
+! Estruturas de repetição: While
 ! -------------------------------------------------------------------
 
 <While> ::= 'while' '(' <Expressao> ')' <Bloco>
