@@ -1,5 +1,5 @@
 start () {
     const{
-        int numero;
+        numero = 10;
     }
 }

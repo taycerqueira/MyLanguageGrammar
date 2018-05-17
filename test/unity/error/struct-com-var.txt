@@ -1,10 +1,10 @@
 start(){
 
     struct Alunos{
-      var{
-        string nome;
-        float matematica, fisica, media;
-      }
+        var{
+            string nome;
+            float matematica, fisica, media;
+        }
     };
 
 }

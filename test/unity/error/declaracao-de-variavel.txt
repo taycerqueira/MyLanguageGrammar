@@ -1,6 +1,6 @@
 start (){
 
-     int numero, nota;
-     print(numero);
+    int numero, nota;
+    print(numero);
 
 }

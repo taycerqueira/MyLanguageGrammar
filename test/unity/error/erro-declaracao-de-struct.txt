@@ -1,8 +1,0 @@
-start (){
-	struct pessoa{
-		var{
-			String nome, rua;
-			int idade, telefone;
-		}
-	}
-}

@@ -1,6 +1,6 @@
 start(){
 
-    typedef struct{ 
+    typedef struct { 
         float peso;  
         int idade;   
         float altura;

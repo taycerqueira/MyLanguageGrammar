@@ -1,7 +1,7 @@
 start (){
-     if (a===b) thn{
-	print (teste);
-     }else{
-	print (teste 2);
-     }
+    if ( a==b ) thn{
+        print ( teste );
+    } else {
+        print ( teste2 );
+    }
 }

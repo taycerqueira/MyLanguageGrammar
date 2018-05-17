@@ -1,4 +1,4 @@
 start () {
-     function() = a;
-     nomefuncao() = 0;
+    function() = a;
+    nomefuncao() = 0;
 }

@@ -1,7 +1,7 @@
-start (){
+start () {
 
-     if (a===b){
-	print (teste);
-     }
+    if ( a==b ){
+        print ( teste );
+    }
 
 }

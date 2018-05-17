@@ -1,6 +1,0 @@
-start (){
-     if (a===b thn{
-	print (teste);
-     }else{
-	print (teste 2);
-}

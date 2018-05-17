@@ -1,9 +1,0 @@
-start (){
-     var {
-	int numero;
-     }
-
-     start(){
-	print ("testando start 2");	
-     }
-}
