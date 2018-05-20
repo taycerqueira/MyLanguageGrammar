@@ -1,7 +1,7 @@
-﻿"Name"      = 'TODO: MyLanguage Grammar'
-"Author"    =  'TODO: List of Authors'
-"Version"   = '0.1'
-"About"     = 'TODO: MyLanguage Grammar,'
+﻿"Name"      = 'Think out Programming Language'
+"Author"    =  'Beatriz de Brito, Cássio Santos, Dermeval Neves, Elvis Huges, Leandro Sampaio, Tayane Cerqueira'
+"Version"   = '1.0'
+"About"     = 'Linguagem desenvolvida para a disciplina MI - Processadores de Linguagem de Programação da UEFS - 2018.1'
 
 "Case Sensitive"    = True
 "Start Symbol"      = <Programa>
@@ -146,9 +146,6 @@ CadeiaDeCaracteres        = '"' ({StringSimbolos} | '\' {Printable})* '"'
 <ParametrosFuncaoAux>   ::= ',' <ParametrosFuncao>
                         | <> ! Produção Vazia
 
-! Expressao diz respeito a qualquer conjunto de valores que podem ficar
-! do lado direto de uma expressão de atribuição
-
 <Expressao>     ::= <OpE> <ExpressaoAux>
 <ExpressaoAux>  ::= '||' <Expressao>
                 | <> ! Produção Vazia
@@ -178,11 +175,14 @@ CadeiaDeCaracteres        = '"' ({StringSimbolos} | '\' {Printable})* '"'
                 | '/' <OpUnary> <OpMultAux>
                 | <> ! Produção Vazia
 
-<OpUnary>   ::= '!' <OpUnary>
-            | '++' <OpUnary>
-            | '--' <OpUnary>
-            | <Final>
-            | <Valor>
+<OpUnary>       ::= '!' <OpUnary>
+                | '++' <OpUnary>
+                | '--' <OpUnary>
+                | <Final> <SimboloUnario>
+                | <Valor> <SimboloUnario>
+<SimboloUnario> ::= '++'
+                | '--'
+                | <> ! Produção Vazia
 
 <Final>     ::= Identificador <Acessando> 
 
@@ -262,7 +262,7 @@ CadeiaDeCaracteres        = '"' ({StringSimbolos} | '\' {Printable})* '"'
 <ExpressaoIdentificadoresStructAux> ::= ';'
                                     | ',' <ExpressaoIdentificadoresStruct>
 
-<ExpressaoIdentificadorStruct>   ::= Identificador ! Campos em Struct não podem ser previamente iniciadas
+<ExpressaoIdentificadorStruct>   ::= Identificador
 
 ! -------------------------------------------------------------------
 ! Estruturas condicionais: If...Then, If...Then...Else
@@ -285,7 +285,7 @@ CadeiaDeCaracteres        = '"' ({StringSimbolos} | '\' {Printable})* '"'
 ! -------------------------------------------------------------------
 
 <Print>         ::= 'print' '(' <Saida> <OutrasSaidas> ')'
-<Saida>           ::= <Expressao>
+<Saida>         ::= <Expressao>
 <OutrasSaidas>  ::= ',' <Saida> <OutrasSaidas> 
                 | <> ! Produção Vazia
 
