@@ -92,7 +92,6 @@ CadeiaDeCaracteres        = '"' ({StringSimbolos} | '\' {Printable})* '"'
             | <EstruturaCondicional>
             | <While>
             | <DeclaracaoDeVar>
-            | <DeclaracaoDeConst>
             | <DeclaracaoDeTypedef>
 
 ! Instrução Normal são as insrtuções de unica linha que terminal com ';'
