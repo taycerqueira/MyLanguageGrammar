@@ -115,6 +115,7 @@ CadeiaDeCaracteres        = '"' ({StringSimbolos} | '\' {Printable})* '"'
             | <> ! Produção Vazia
 
 <TipoBase>  ::= <Escalar>
+            | <DeclaracaoDeStruct>
             | Identificador
             | 'struct' Identificador
 
@@ -135,11 +136,9 @@ CadeiaDeCaracteres        = '"' ({StringSimbolos} | '\' {Printable})* '"'
 ! Precedência de Operadores
 ! -------------------------------------------------
 
-<OperacaoDeAtribuicao>  ::= Identificador <OperacaoDeAtribuicaoAux>
-                          | <Expressao>
-
-<OperacaoDeAtribuicaoAux> ::=  '=' <Expressao> 
-                          | <Acessando> '=' <Expressao>
+<OperacaoDeAtribuicao>  ::= <Final> '=' <Expressao>
+                        | Identificador '=' <Expressao>
+                        | <Expressao>
 
 
 <ParametrosFuncao>      ::= <Expressao> <ParametrosFuncaoAux>
@@ -178,16 +177,13 @@ CadeiaDeCaracteres        = '"' ({StringSimbolos} | '\' {Printable})* '"'
 <OpUnary>       ::= '!' <OpUnary>
                 | '++' <OpUnary>
                 | '--' <OpUnary>
-                | Identificador <OpUnaryAux>
+                | <Final> <SimboloUnario>
                 | <Valor> <SimboloUnario>
-
-<OpUnaryAux>    ::= <SimboloUnario>
-                | <Acessando> <SimboloUnario>
-                | <ValorAux1>
-
 <SimboloUnario> ::= '++'
                 | '--'
                 | <> ! Produção Vazia
+
+<Final>     ::= Identificador <Acessando> 
 
 <Acessando>     ::= <Acesso> <AcessandoAux>
 <AcessandoAux>  ::= <Acessando>
@@ -197,7 +193,8 @@ CadeiaDeCaracteres        = '"' ({StringSimbolos} | '\' {Printable})* '"'
                 | '[' <Expressao> ']' ! Acesso de array
 
 ! <Valor> deve ser o ultimo nível de precedência
-<Valor>     ::= '(' <Expressao> ')'
+<Valor>     ::= Identificador <ValorAux1>
+            | '(' <Expressao> ')'
             | Digitos
             | CadeiaDeCaracteres
             | 'true'
@@ -292,9 +289,6 @@ CadeiaDeCaracteres        = '"' ({StringSimbolos} | '\' {Printable})* '"'
                 | <> ! Produção Vazia
 
 <Scan>              ::= 'scan' '(' <Entrada> <OutrasEntradas> ')'
-<Entrada>           ::=  Identificador <EntradaAux>
-
-<EntradaAux>        ::= <Acessando>
-                    | <>
+<Entrada>           ::= <Final> | Identificador
 <OutrasEntradas>    ::= ',' <Entrada> <OutrasEntradas> 
                     | <> ! Produção Vazia
