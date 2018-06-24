@@ -176,8 +176,8 @@ CadeiaDeCaracteres        = '"' ({StringSimbolos} | '\' {Printable})* '"'
 <OpUnary>       ::= '!' <OpUnary>
                 | '++' <OpUnary>
                 | '--' <OpUnary>
-                | <Final> <SimboloUnario>
                 | <Valor> <SimboloUnario>
+                
 <SimboloUnario> ::= '++'
                 | '--'
                 | <> ! Produção Vazia
@@ -192,12 +192,14 @@ CadeiaDeCaracteres        = '"' ({StringSimbolos} | '\' {Printable})* '"'
                 | '[' <Expressao> ']' ! Acesso de array
 
 ! <Valor> deve ser o ultimo nível de precedência
-<Valor>     ::= Identificador <ValorAux1>
+<Valor>     ::= Identificador <ValorAux3>
             | '(' <Expressao> ')'
             | Digitos
             | CadeiaDeCaracteres
             | 'true'
             | 'false'
+<ValorAux3> ::= <Acessando> <SimboloUnario>
+               | <ValorAux1>
 <ValorAux1> ::= '(' <ValorAux2>
             | <> ! Produção Vazia
 <ValorAux2> ::=  <ParametrosFuncao> ')' ! Função ou procedimento com parametros
@@ -288,6 +290,7 @@ CadeiaDeCaracteres        = '"' ({StringSimbolos} | '\' {Printable})* '"'
                 | <> ! Produção Vazia
 
 <Scan>              ::= 'scan' '(' <Entrada> <OutrasEntradas> ')'
-<Entrada>           ::= <Final> | Identificador
+<Entrada>           ::= Identificador <EntradaAux>
+<EntradaAux>        ::= <Acessando>  | <> 
 <OutrasEntradas>    ::= ',' <Entrada> <OutrasEntradas> 
                     | <> ! Produção Vazia
