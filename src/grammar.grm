@@ -115,6 +115,7 @@ CadeiaDeCaracteres        = '"' ({StringSimbolos} | '\' {Printable})* '"'
             | <> ! Produção Vazia
 
 <TipoBase>  ::= <Escalar>
+            | <DeclaracaoDeStruct>
             | Identificador
             | 'struct' Identificador
 
